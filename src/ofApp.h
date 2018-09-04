@@ -10,17 +10,31 @@ class RectObj {
 		int previousX;
 		int previousY;
 		bool clickedInside;
+		bool switchColors = false;
 
 		void draw() {
+			if (switchColors) ofSetColor(ofColor::green);
+			else ofSetColor(ofColor::red);
 			ofDrawRectangle(pos, 100, 100);
 		}
 
-		bool inside(int x, int  y) {
+		void clicked(int x, int y) {
 			clickedInside = ((x > pos.x && x < pos.x + w) && (y > pos.y && pos.y + h));
 			previousX = x;
 			previousY = y;
-			return clickedInside;
+			switchColors = !switchColors;
 		}
+
+		void released(){
+			switchColors = !switchColors;
+		}
+
+		//bool inside(int x, int  y) {
+		//	clickedInside = ((x > pos.x && x < pos.x + w) && (y > pos.y && pos.y + h));
+		//	previousX = x;
+		//	previousY = y;
+		//	return clickedInside;
+		//}
 
 		void translate(int x, int y) {
 			int diffX = x - previousX;
