@@ -18,7 +18,7 @@ void ofApp::update(){
 void ofApp::draw(){
 	if(!bHide) gui.draw();
 	cam.begin();
-	ofNoFill();
+	/*ofNoFill();*/
 	ofDrawBox(10);   /* this creates a cube*/
 	cam.end();
 }

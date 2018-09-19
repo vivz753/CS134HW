@@ -7,23 +7,29 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+	sys.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	/*ofSetColor(ofColor::red);*/
-	rect.draw();
+	emitter.draw();
+	sys.draw();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+	switch (key) {
+	case 'F':
+	case'f':
+		emitter.start();
 
+	}
+	//space to shoot the sprites
 }
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-
+	//stop shooting
 }
 
 //--------------------------------------------------------------
@@ -33,29 +39,17 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-	cout << "dragging" << x << ")" << endl;
-	if (rect.clickedInside) rect.translate(x, y);
+
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-	rect.clicked(x, y);
-	cout << rect.pos << endl;
-	//cout << "(" << x << "," << y << ")" << endl;
-	//if (rect.inside(x, y)) {
-	//	rect.switchColors();
-	//	cout << "hit";
-	//}
-	//	
-	//else {
-	//	cout << "miss";
-	//}
-		
+
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-	rect.released();
+
 }
 
 //--------------------------------------------------------------
