@@ -142,54 +142,41 @@ public:
 			sys.draw();
 		}
 	};
-
-	void start() {	//start the game
+	void start() {
 		started = true;
 		cout << "started" << endl;
 
-	}; 
-
-	void stop() {	//stop the game
+	}; //create sprites depending on the rate
+	void stop() {
 		started = false;
 		cout << "stopped" << endl;
 	};
-
-	void setLifespan(float) {
-	
-	};
-
-	void setVelocity(ofVec3f) {
-	
-	};
-
-	void setChildImage(ofImage) {
-
-	}; //refers to sprites that come out of the emitter
-
-	void setImage(ofImage) {
-
-	};
-
+	void setLifespan(float);
+	void setVelocity(ofVec3f);
+	void setChildImage(ofImage); //refers to sprites that come out of the emitter
+	void setImage(ofImage);
 	void setRate(float r) {
 		rate = r;
 	};
 
-	void shoot() {	//create sprites
+	void shoot() {
 			Sprite * sprite = new Sprite();
 			sprite->setPosition(pos);
 			
 			//set sprite rates & names & images
 			sys.add(*sprite);
 			lastSpawned = ofGetElapsedTimeMillis();
-
+		//float a = ofGetElapsedTimeMillis();
+		//float b = 100;
+		//if (fmod(a, b) == 0) {
+		//	cout << "fire" << endl;
+		//}
 	}
 
-	void update() { //shoots depending on the rate
-
+	void update() {
 		if (started && shooting && (ofGetElapsedTimeMillis() - lastSpawned) > (1000/rate)) {
 				shoot();	
 			}
-
 		sys.update();
 		}
 

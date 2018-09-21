@@ -29,6 +29,7 @@ void ofApp::keyPressed(int key){
 	case 'd':
 		if (emitter.started) {
 			emitter.shooting = true;
+			cout << "pressing d" << endl;
 		}
 		break;
 	case 'q':
