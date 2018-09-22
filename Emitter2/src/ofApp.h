@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxGui.h"
 
 typedef enum { MoveStop, MoveLeft, MoveRight, MoveUp, MoveDown } MoveDir;
 
@@ -30,20 +31,17 @@ public:
 	//ofVec2f pos;
 	Sprite() {
 		
-		birthtime = ofGetElapsedTimeMillis(); 
-		//haveImage = false;
-
-		width = 15;
-		height = 15;
-		speed = 5;
-		velocity = ofVec3f(0, -50, 0);
-		lifespan = 5000;
-		name = "spr"; 
 	};
 
 	void draw()	{
+		if (!haveImage) {
 			ofSetColor(ofColor::blue);
 			ofDrawRectangle(trans, width, height);
+		}
+		else {
+			image.draw(trans, width, height);
+		}
+			
 		};
 
 	float age() {
@@ -72,8 +70,10 @@ public:
 
 	//adds sprites to the vector array
 	void add(Sprite s) {
+		
 		sprites.push_back(s);
-		cout << sprites.size() << endl;
+		s.name = "spr" + to_string(sprites.size());
+		
 	};
 
 	//removes sprite at index[int]
@@ -124,21 +124,38 @@ public:
 //
 class Emitter : public BaseObject {
 public:
-	ofVec2f pos = ofVec2f(50, 50);
+	ofSoundPlayer shootSound;
 	Emitter(SpriteSystem s) {
 		//Emitter holds a SpriteSystem
+	
+		shootSound.load("light.mp3");
 		sys = s;
-		width = 20;
-		height = 20;
-		rate = 5;
+		width = 50;
+		height = 50;
 		started = false;
 		shooting = false;
+		haveImage = false;
+		haveChildImage = false;
+	
+		image.load("jar.png");
+		ofImage gun = image;
+		childImage.load("cookie.png");
+		ofImage bullet = childImage;
+		setChildImage(bullet);
+		setImage(gun);
+
 	};
+
 	void draw() {
 		//draws the Emitter
 		if (started) {
-			ofSetColor(ofColor::red);
-			ofDrawRectangle(pos, width, height);
+			if (!haveImage) {
+				ofSetColor(ofColor::red);
+				ofDrawRectangle(trans, width, height);
+			}
+			else {
+				image.draw(trans, width, height);
+			}
 			sys.draw();
 		}
 	};
@@ -154,33 +171,42 @@ public:
 		cout << "stopped" << endl;
 	};
 
-	void setLifespan(float) {
-	
+	void setLifespan(float l) {
+		lifespan = l;
 	};
 
-	void setVelocity(ofVec3f) {
-	
+	void setVelocity(int v) {
+		velocity.y = -v;
 	};
 
-	void setChildImage(ofImage) {
-
+	void setChildImage(ofImage c) {
+		childImage = c;
+		haveChildImage = true;
 	}; //refers to sprites that come out of the emitter
 
-	void setImage(ofImage) {
-
+	void setImage(ofImage i) {
+		image = i;
+		haveImage = true;
 	};
 
 	void setRate(float r) {
 		rate = r;
 	};
 
-	void shoot() {	//create sprites
-			Sprite * sprite = new Sprite();
-			sprite->setPosition(pos);
-			
-			//set sprite rates & names & images
-			sys.add(*sprite);
+	void shoot() {	//create sprite
+		shootSound.play();
 			lastSpawned = ofGetElapsedTimeMillis();
+			Sprite * sprite = new Sprite();
+			sprite->width = 15;
+			sprite->height = 15;
+			ofVec3f centered = ofVec3f(trans.x + width/2 - sprite->width/2 , trans.y);
+			sprite->setPosition(centered);
+			sprite->lifespan = lifespan;
+			sprite->velocity = velocity;
+			sprite->setImage(childImage);
+			sprite->birthtime = lastSpawned;
+			sys.add(*sprite);
+			
 
 	}
 
@@ -191,23 +217,26 @@ public:
 			}
 
 		sys.update();
+
 		}
 
-		//cout << ofGetElapsedTimeMillis() << endl;
 	//only updates if started, otherwise return nothing
 	//if started n called, checked ellapsedTime & firing them based off of rate
 		//creates new sprite & gives it image, velocity, lifespan; can put all in constructor parameters, or use set methods
 	
 
 	void translate(int x, int y) {
-		pos.x = x;
-		pos.y = y;
+		if (x < (ofGetWindowWidth() - width) && x > 0 && y < (ofGetWindowHeight()-height) && y >0) {
+			trans.x = x;
+			trans.y = y;
+		}
+
 	}
 
-	bool shooting;
+	bool shooting;	//set to true if user key is pressed down
 	SpriteSystem sys;	//manager of sprites
 	float rate;	//rate of firing sprites
-	ofVec3f velocity;
+	ofVec3f velocity; 
 	float lifespan; //life span of sprites
 	bool started; //draw the emitter & shoot stuff
 	float lastSpawned; //time last sprite was spawned
@@ -238,7 +267,15 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
-		//SpriteSystem sys; 
+	
 		Emitter emitter = Emitter(SpriteSystem());
-		//Sprite sprite;
+		ofxFloatSlider firingRateSlider;
+		ofxFloatSlider velocitySlider;
+		ofxFloatSlider lifeSpanSlider;
+		ofxPanel gui;
+		bool pressingMouse;
+		ofImage background;
+		ofSoundPlayer bgMusic;
+		ofTrueTypeFont text;
+	
 };
