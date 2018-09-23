@@ -18,8 +18,8 @@ void ofApp::update(){
 void ofApp::draw(){
 	if(!bHide) gui.draw();
 	cam.begin();
-	/*ofNoFill();*/
-	ofDrawBox(10);   /* this creates a cube*/
+	ofNoFill();
+	ofDrawBox(10,20,30);   /* this creates a cube*/
 	cam.end();
 }
 
@@ -34,8 +34,10 @@ void ofApp::keyPressed(int key){
 	case 'F':
 	case'f':
 		ofToggleFullscreen();
+		break;
 	case 'h':
 		bHide = !bHide;
+		break;
 	}
 }
 

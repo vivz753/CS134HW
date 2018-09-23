@@ -1,3 +1,10 @@
+//DESCRIPTION:
+//Project 1 submission by Vivian Leung for Prof. Kevin Smith's CS134 at SJSU
+
+//INSTRUCTIONS:
+//Press spacebar to begin. Use mouse to move gun around. Press space or click to shoot bullets. Press q to quit.
+//Slider GUI in top left corner can be used to adjust the rate, velocity, and lifespan of bullet sprites. 
+
 #pragma once
 
 #include "ofMain.h"
@@ -7,7 +14,6 @@ typedef enum { MoveStop, MoveLeft, MoveRight, MoveUp, MoveDown } MoveDir;
 
 // This is a base object that all drawable object inherit from
 // It is possible this will be replaced by ofNode when we move to 3D
-//
 class BaseObject {
 public:
 	BaseObject() {
@@ -25,7 +31,6 @@ public:
 };
 
 //  General Sprite class  (similar to a Particle)
-//
 class Sprite : public BaseObject {
 public:
 	//ofVec2f pos;
@@ -34,6 +39,7 @@ public:
 	};
 
 	void draw()	{
+		//draw a blue box by default if no image is set
 		if (!haveImage) {
 			ofSetColor(ofColor::blue);
 			ofDrawRectangle(trans, width, height);
@@ -41,14 +47,13 @@ public:
 		else {
 			image.draw(trans, width, height);
 		}
-			
 		};
 
 	float age() {
 		return ofGetElapsedTimeMillis() - birthtime;
 	};
 
-	void setImage(ofImage i) { //!not sure how this works
+	void setImage(ofImage i) { 
 		image = i;
 		haveImage = true;
 	};
@@ -137,17 +142,12 @@ public:
 		haveImage = false;
 		haveChildImage = false;
 	
-		image.load("jar.png");
-		ofImage gun = image;
-		childImage.load("cookie.png");
-		ofImage bullet = childImage;
-		setChildImage(bullet);
-		setImage(gun);
+		
 
 	};
 
+	//draws the Emitter
 	void draw() {
-		//draws the Emitter
 		if (started) {
 			if (!haveImage) {
 				ofSetColor(ofColor::red);
@@ -171,29 +171,29 @@ public:
 		cout << "stopped" << endl;
 	};
 
-	void setLifespan(float l) {
+	void setLifespan(float l) { //set lifespan of sprites
 		lifespan = l;
 	};
 
-	void setVelocity(int v) {
+	void setVelocity(int v) { //set velocity of sprites
 		velocity.y = -v;
 	};
 
-	void setChildImage(ofImage c) {
+	void setChildImage(ofImage c) { //set image of sprites
 		childImage = c;
 		haveChildImage = true;
-	}; //refers to sprites that come out of the emitter
+	}; 
 
-	void setImage(ofImage i) {
+	void setImage(ofImage i) { //set image of emitter
 		image = i;
 		haveImage = true;
 	};
 
-	void setRate(float r) {
+	void setRate(float r) { //set firing rate of sprites
 		rate = r;
 	};
 
-	void shoot() {	//create sprite
+	void shoot() {	//creates sprite, sets properties, adds to array
 		shootSound.play();
 			lastSpawned = ofGetElapsedTimeMillis();
 			Sprite * sprite = new Sprite();
@@ -211,21 +211,19 @@ public:
 	}
 
 	void update() { //shoots depending on the rate
-
-		if (started && shooting && (ofGetElapsedTimeMillis() - lastSpawned) > (1000/rate)) {
-				shoot();	
+		//only updates if started, otherwise return nothing
+		//if started and called, checked ellapsedTime & firing them based off of rate
+		//custom formula to determine how often to fire sprites
+		if (started && shooting) {
+			if((ofGetElapsedTimeMillis() - lastSpawned) > (1000 / rate)) shoot();	
 			}
-
 		sys.update();
 
 		}
 
-	//only updates if started, otherwise return nothing
-	//if started n called, checked ellapsedTime & firing them based off of rate
-		//creates new sprite & gives it image, velocity, lifespan; can put all in constructor parameters, or use set methods
-	
-
+	//move emitter according to mouse
 	void translate(int x, int y) {
+		//do not allow emitter to go outside window
 		if (x < (ofGetWindowWidth() - width) && x > 0 && y < (ofGetWindowHeight()-height) && y >0) {
 			trans.x = x;
 			trans.y = y;
@@ -277,5 +275,9 @@ class ofApp : public ofBaseApp{
 		ofImage background;
 		ofSoundPlayer bgMusic;
 		ofTrueTypeFont text;
+
+		ofImage gun;
+		ofImage bullet;
+
 	
 };

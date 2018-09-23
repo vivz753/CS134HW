@@ -3,15 +3,28 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	
+	//initialize start menu elements
 	text.load("arial.ttf", 32);
 	background.load("gotmenu.jpg");
+
+	//load starting bg music
 	bgMusic.load("gottheme.mp3");
 	bgMusic.play();
 	bgMusic.setLoop(true);
+
+	//construct GUI
 	gui.setup();
 	gui.add(firingRateSlider.setup("rate", 10, 0, 20));
 	gui.add(velocitySlider.setup("velocity", 1000, 0, 2000));
 	gui.add(lifeSpanSlider.setup("lifespan", 500, 0, 1000));
+
+	//set images for emitter & sprites
+	gun.load("jar.png");
+	bullet.load("cookie.png");
+	emitter.setChildImage(bullet);
+	emitter.setImage(gun);
+
+	//set emitter properties based off of GUI sliders
 	emitter.setRate(firingRateSlider);
 	emitter.setVelocity(velocitySlider);
 	emitter.setLifespan(lifeSpanSlider);
@@ -19,7 +32,10 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+
 	emitter.update();
+
+	//update properties based off of GUI sliders
 	emitter.setRate(firingRateSlider);
 	emitter.setVelocity(velocitySlider);
 	emitter.setLifespan(lifeSpanSlider);
@@ -28,34 +44,33 @@ void ofApp::update(){
 }
 
 //--------------------------------------------------------------
-void ofApp::draw(){
+void ofApp::draw() {
+
+	//draw background image
 	background.resize(ofGetWindowWidth(), ofGetWindowHeight());
-	background.draw(0,0);
-		emitter.draw();
-		if (emitter.started) {
-			gui.draw();
-		}
-		else {
-			text.drawString("press spacebar to begin", ofGetWindowWidth()*3/10, ofGetWindowHeight()*13/20);
-		}
-		
-		//emitter.sys.draw();
-	//sprite.draw();
+	background.draw(0, 0);
+
+	emitter.draw();
+
+	//draw GUI when game begins
+	if (emitter.started) {
+		gui.draw();
+	}
+
+	//draw start menu text
+	else {
+		text.drawString("press spacebar to begin", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
+	}
+
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+
 	switch (key) {
-	//case'f':
-	//	if (!emitter.started) {
-	//		emitter.start();
-	//		background.load("jonsnow.jpg");
-	//		bgMusic.load("winterfell.mp3");
-	//		bgMusic.play();
-	//		bgMusic.setLoop(true);
-	//	}
-	//	break;
+	//start game upon spacebar key
 	case ' ':
+		//load in game elements
 		if (!emitter.started) {
 			emitter.start();
 			background.load("jonsnow.jpg");
@@ -63,44 +78,51 @@ void ofApp::keyPressed(int key){
 			bgMusic.play();
 			bgMusic.setLoop(true);
 		}
+		//shoot bullets upon spacebar key
 		else if (emitter.started) {
 			emitter.shooting = true;
 		}
 		break;
+	//quit game upon q key
 	case 'q':
+		//load start menu elements
 		if (emitter.started) {
 			emitter.stop();
 			background.load("gotmenu.jpg");
-			bgMusic.load("got8bit.mp3");
+			bgMusic.load("gottheme.mp3");
 			bgMusic.play();
 			bgMusic.setLoop(true);
 		}
 		break;
 
+
 	}
-	//space to shoot the sprites
+
 }
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
 	//stop shooting
 	if(!pressingMouse) emitter.shooting = false;
-	cout << "released key" << endl;
+
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
+	//emitter follows mouse movement
 	emitter.translate(x, y);
 
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
+	//emitter shoots and follows mouse movement
 	emitter.translate(x, y);
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
+	//emitter shoots
 	if (emitter.started) {
 		emitter.shooting = true;
 	}
@@ -109,6 +131,7 @@ void ofApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
+	//stop shooting
 	emitter.shooting = false;
 	pressingMouse = false;
 }
