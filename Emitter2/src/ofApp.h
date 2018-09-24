@@ -175,8 +175,8 @@ public:
 		lifespan = l;
 	};
 
-	void setVelocity(int v) { //set velocity of sprites
-		velocity.y = -v;
+	void setVelocity(ofVec3f v) { //set velocity of sprites
+		velocity = v;
 	};
 
 	void setChildImage(ofImage c) { //set image of sprites
@@ -268,7 +268,8 @@ class ofApp : public ofBaseApp{
 	
 		Emitter emitter = Emitter(SpriteSystem());
 		ofxFloatSlider firingRateSlider;
-		ofxFloatSlider velocitySlider;
+		ofxFloatSlider velocityXSlider;
+		ofxFloatSlider velocityYSlider;
 		ofxFloatSlider lifeSpanSlider;
 		ofxPanel gui;
 		bool pressingMouse;
@@ -278,6 +279,6 @@ class ofApp : public ofBaseApp{
 
 		ofImage gun;
 		ofImage bullet;
-
+		ofVec3f v;
 	
 };

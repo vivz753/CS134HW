@@ -15,7 +15,8 @@ void ofApp::setup(){
 	//construct GUI
 	gui.setup();
 	gui.add(firingRateSlider.setup("rate", 10, 0, 20));
-	gui.add(velocitySlider.setup("velocity", 1000, 0, 2000));
+	gui.add(velocityXSlider.setup("velocity X", 1000, -2000, 2000));
+	gui.add(velocityYSlider.setup("velocity Y", 1000, -2000, 2000));
 	gui.add(lifeSpanSlider.setup("lifespan", 500, 0, 1000));
 
 	//set images for emitter & sprites
@@ -26,7 +27,10 @@ void ofApp::setup(){
 
 	//set emitter properties based off of GUI sliders
 	emitter.setRate(firingRateSlider);
-	emitter.setVelocity(velocitySlider);
+	v.x = velocityXSlider;
+	v.y = velocityYSlider;
+	
+	emitter.setVelocity(v);
 	emitter.setLifespan(lifeSpanSlider);
 }
 
@@ -34,10 +38,11 @@ void ofApp::setup(){
 void ofApp::update(){
 
 	emitter.update();
-
+	v.x = velocityXSlider;
+	v.y = velocityYSlider;
 	//update properties based off of GUI sliders
 	emitter.setRate(firingRateSlider);
-	emitter.setVelocity(velocitySlider);
+	emitter.setVelocity(v);
 	emitter.setLifespan(lifeSpanSlider);
 	
 	
