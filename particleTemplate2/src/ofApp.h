@@ -40,4 +40,5 @@ class ofApp : public ofBaseApp{
 		ofxPanel gui;
 		ParticleEmitter pe;
 		GravityForce *g;
+		TurbulenceForce *turbulence;
 };

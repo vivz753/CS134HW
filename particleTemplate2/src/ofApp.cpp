@@ -2,6 +2,8 @@
 //
 //  Kevin M. Smith - CS 134 - SJSU CS
 
+//Completed by Vivian Leung on 10/1/2018
+
 #include "ofApp.h"
 
 
@@ -36,8 +38,10 @@ void ofApp::setup(){
 
 	//*Create a new GravityForce and adjust it based on the slider 'gravity' value
 	g = new GravityForce(ofVec3f(0, -gravity, 0));
+	turbulence = new TurbulenceForce(ofVec3f(-5, -5, -5), ofVec3f(5, 5, 5));
 	//*Add the force to the Particle Emitter's Particle System
 	pe.sys->addForce(g);
+	pe.sys->addForce(turbulence);
 
 	//
 	// setup any objects you've created here...
