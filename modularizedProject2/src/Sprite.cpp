@@ -4,6 +4,10 @@
 
 Sprite::Sprite()
 {
+	trans = ofVec2f(250, 0);
+	width = 50;
+	height = 50;
+	haveImage = false;
 }
 
 

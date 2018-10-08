@@ -53,18 +53,37 @@ public:
 		sprites.erase(sprites.begin() + i);
 	};
 
-	//removes sprites that are near 
-	void removeNear(ofVec3f point, float dist) {
+	void remove(vector<Sprite>::iterator & i) {
+		i->lifespan = 1;
+	}
+
+
+	bool collided(ofVec3f point, float dist) {
 		vector<Sprite>::iterator s = sprites.begin();
-		vector<Sprite>::iterator tmp;
 		while (s != sprites.end()) {
 			ofVec3f v = s->trans - point;
 			if (v.length() < dist) {
-				tmp = sprites.erase(s);
-				s = tmp;
+				return true;
+			}
+		}
+	}
+	//removes sprites that are near 
+	bool removeNear(ofVec3f point, float dist) {
+		bool erased = false;
+		vector<Sprite>::iterator s = sprites.begin();
+		//vector<Sprite>::iterator tmp;
+		while (s != sprites.end()) {
+			ofVec3f v = s->trans - point;
+			
+			if (v.length() < 50) {
+				s = sprites.erase(s);
+				//s->lifespan = 1;
+				erased = true;
+				//s = tmp;
 			}
 			else s++;
 		}
+		return erased;
 	}
 
 	void update() {

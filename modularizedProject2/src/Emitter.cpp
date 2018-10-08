@@ -2,34 +2,66 @@
 #include "Emitter.h"
 
 
-Emitter::Emitter(SpriteSystem s)
+Emitter::Emitter()
 {
+	sys = SpriteSystem();
+	haveImage = false;
+	haveChildImage = false;
+	
+};
+
+void Emitter::gunInit() {
 	shootSound.load("light.mp3");
-	sys = s;
 	width = 50;
 	height = 50;
 	started = false;
 	shooting = false;
-	haveImage = false;
-	haveChildImage = false;
+	enemyEmitter = false; 
+	velocity = ofVec3f(0, -500, 0);
+	rate = 5;
+	lifespan = 1500;
+	hp = 200;
+	score = 0;
+	dead = false;
+};
 
+void Emitter::enemiesInit(float size) {
+	//trans = ofVec3f(500, 0);
+	velocity = ofVec3f(0, 450, 0);
+	rate = 2;
+	width = size;
+	height = size;
+	started = false;
+	shooting = true;
+	enemyEmitter = true;
+	lifespan = 1500;
 };
 
 void Emitter::draw() {
 	if (started) {
-		if (!haveImage) {
-			ofSetColor(ofColor::red);
-			ofDrawRectangle(trans, width, height);
+		if (!haveImage) {			
+			//ofDrawRectangle(trans, width, height);
 		}
 		else {
-			image.draw(trans, width, height);
+			/*if (!enemyEmitter) {
+				ofPushMatrix();
+				ofRotate(10);*/
+
+				image.draw(trans, width, height);
+				/*ofPopMatrix();
+				
+			}*/
+			
 		}
 		sys.draw();
 	}
 };
 
 void Emitter::start() {
+	dead = false;
 	this->started = true;
+	hp = 200;
+	score = 0;
 	cout << "started" << endl;
 
 };
@@ -62,11 +94,18 @@ void Emitter::setRate(float r) { //set firing rate of sprites
 };
 
 void Emitter::shoot() {
-	shootSound.play();
+	//shootSound.play();
 	lastSpawned = ofGetElapsedTimeMillis();
 	Sprite * sprite = new Sprite();
-	sprite->width = 15;
-	sprite->height = 15;
+	if (enemyEmitter) {
+		sprite->width = 50;
+		sprite->height = 50;
+	}
+	else {
+		sprite->width = 50;
+		sprite->height = 50;
+	}
+	
 	ofVec3f centered = ofVec3f(trans.x + width / 2 - sprite->width / 2, trans.y);
 	sprite->setPosition(centered);
 	sprite->lifespan = lifespan;
@@ -77,8 +116,17 @@ void Emitter::shoot() {
 };
 
 void Emitter::update() {
-	if (started && shooting) {
+	if ((started && shooting) || enemyEmitter) {
 		if ((ofGetElapsedTimeMillis() - lastSpawned) > (1000 / rate)) shoot();
+	}
+
+	//have the enemy emitters move around
+	if (enemyEmitter) {
+		trans = ofVec3f(ofRandom(0, ofGetWindowWidth() -50), 0, 0) ;
+	}
+
+	if (moving) {
+		translate(movingVector);
 	}
 	sys.update();
 };
@@ -89,6 +137,31 @@ void Emitter::translate(int x, int y) {
 		trans.y = y;
 	}
 };
+
+void Emitter::translate(ofVec3f v) {
+	ofVec3f newPos = trans + v/ofGetFrameRate();
+	if (newPos.x < (ofGetWindowWidth() - width) && newPos.x>0 && newPos.y < (ofGetWindowHeight() - height) && newPos.y>0) {
+		trans += v / ofGetFrameRate();
+	}
+};
+
+
+
+float Emitter::maxDistPerFrame() {
+	
+	return  velocity.length() / ofGetFrameRate();
+}
+
+bool Emitter::collided(ofVec3f point, float dist) {
+	ofVec3f v = trans - point;
+	if (v.length() < 50) {
+		hp -= 25;
+		cout << hp << endl;
+		return true;
+	}
+	return false;
+}
+
 
 
 

@@ -7,8 +7,15 @@
 class Emitter : public BaseObject
 {
 public:
+	//assets
 	ofSoundPlayer shootSound;
-	Emitter(SpriteSystem s);
+
+	//constructor
+	Emitter();
+	void gunInit();
+	void enemiesInit(float);
+
+	//methods
 	void draw();
 	void start();
 	void stop();
@@ -20,6 +27,12 @@ public:
 	void shoot();
 	void update();
 	void translate(int, int);
+	void translate(ofVec3f);
+	float maxDistPerFrame();
+	bool collided(ofVec3f, float);
+	
+
+	//attributes
 	bool shooting;
 	SpriteSystem sys;
 	float rate;
@@ -33,7 +46,12 @@ public:
 	bool haveChildImage;
 	bool haveImage;
 	float width, height;
-	
+	bool enemyEmitter;
+	bool moving;
+	ofVec3f movingVector;
+	int hp;
+	int score;
+	bool dead;
 };
 
 
