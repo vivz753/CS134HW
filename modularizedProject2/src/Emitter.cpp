@@ -43,6 +43,8 @@ void Emitter::draw() {
 			//ofDrawRectangle(trans, width, height);
 		}
 		else {
+
+			//eventually implement rotation by cursor to have 360 degree aiming & shooting
 			/*if (!enemyEmitter) {
 				ofPushMatrix();
 				ofRotate(10);*/
@@ -120,7 +122,7 @@ void Emitter::update() {
 		if ((ofGetElapsedTimeMillis() - lastSpawned) > (1000 / rate)) shoot();
 	}
 
-	//have the enemy emitters move around
+	//have the enemy emitters move around randomly
 	if (enemyEmitter) {
 		trans = ofVec3f(ofRandom(0, ofGetWindowWidth() -50), 0, 0) ;
 	}
@@ -131,6 +133,7 @@ void Emitter::update() {
 	sys.update();
 };
 
+//translate the Emitter with mouse coordinates
 void Emitter::translate(int x, int y) {
 	if (x < (ofGetWindowWidth() - width) && x > 0 && y < (ofGetWindowHeight() - height) && y >0) {
 		trans.x = x;
@@ -138,6 +141,7 @@ void Emitter::translate(int x, int y) {
 	}
 };
 
+//translate the Emitter using WASD keys
 void Emitter::translate(ofVec3f v) {
 	ofVec3f newPos = trans + v/ofGetFrameRate();
 	if (newPos.x < (ofGetWindowWidth() - width) && newPos.x>0 && newPos.y < (ofGetWindowHeight() - height) && newPos.y>0) {
@@ -152,6 +156,7 @@ float Emitter::maxDistPerFrame() {
 	return  velocity.length() / ofGetFrameRate();
 }
 
+//check to see if enemies collided with the Emitter, if so reduce the hp
 bool Emitter::collided(ofVec3f point, float dist) {
 	ofVec3f v = trans - point;
 	if (v.length() < 50) {
