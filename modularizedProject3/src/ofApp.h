@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "HomeScreen.h"
+#include "InGameScreen.h"
 #include "Screen.h"
 #include "ofxGui.h"
 
@@ -26,9 +27,14 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
 		void setScreen(Screen * s) {
+			if (screen != NULL) {
+				screen->terminate();
+			}
 			screen = s;
+			screen->init();
 		};
 
 		Screen * screen;
 		HomeScreen * home = new HomeScreen();
+		InGameScreen * inGame = new InGameScreen();
 };
