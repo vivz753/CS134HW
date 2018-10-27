@@ -66,9 +66,22 @@ void InGameScreen::terminate() {
 void InGameScreen::draw()
 {
 	//draw background image
+
 	background.resize(ofGetWindowWidth(), ofGetWindowHeight());
 	background.draw(0, 0);
-	text.drawString("level 1; press q to quit", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
+
+	switch (levelType) {
+	case Level1:
+		text.drawString("level 1; press q to quit", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
+		break;
+	case Level2:
+		text.drawString("level 2; press q to quit", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
+		break;
+	case Level3:
+		text.drawString("level 3; press q to quit", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
+		break;
+	}
+	
 
 };
 

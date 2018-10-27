@@ -25,6 +25,9 @@
 		<ClCompile Include="src\Screen.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
+		<ClCompile Include="src\SelectLevel.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
 		<ClCompile Include="..\..\..\Visual Studio 2017\of_v0.10.0_vs2017_release\addons\ofxGui\src\ofxBaseGui.cpp">
 			<Filter>addons\ofxGui\src</Filter>
 		</ClCompile>
@@ -87,6 +90,9 @@
 			<Filter>src</Filter>
 		</ClInclude>
 		<ClInclude Include="src\Screen.h">
+			<Filter>src</Filter>
+		</ClInclude>
+		<ClInclude Include="src\SelectLevel.h">
 			<Filter>src</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\Visual Studio 2017\of_v0.10.0_vs2017_release\addons\ofxGui\src\ofxBaseGui.h">

@@ -34,6 +34,20 @@ class ofApp : public ofBaseApp{
 			screen->init();
 		};
 
+		void setLevel(int i) {
+			switch (i) {
+			case 1:
+				inGame->setLevel(Level1);
+				break;
+			case 2:
+				inGame->setLevel(Level2);
+				break;
+			case 3:
+				inGame->setLevel(Level3);
+				break;
+			}
+		}
+
 		Screen * screen;
 		HomeScreen * home = new HomeScreen();
 		InGameScreen * inGame = new InGameScreen();

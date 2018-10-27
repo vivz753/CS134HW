@@ -11,6 +11,7 @@ HomeScreen::HomeScreen() {
 
 void HomeScreen::init()
 {
+	transitionLevel = 1;
 	//initialize start menu elements
 	text.load("arial.ttf", 32);
 	background.load("gotmenu.jpg");
