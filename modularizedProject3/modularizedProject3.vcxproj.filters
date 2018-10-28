@@ -7,13 +7,13 @@
 		<ClCompile Include="src\main.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
+		<ClCompile Include="src\Emitter.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
 		<ClCompile Include="src\HomeScreen.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
 		<ClCompile Include="src\InGameScreen.cpp">
-			<Filter>src</Filter>
-		</ClCompile>
-		<ClCompile Include="src\LevelOne.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
 		<ClCompile Include="src\main.cpp">
@@ -25,7 +25,7 @@
 		<ClCompile Include="src\Screen.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
-		<ClCompile Include="src\SelectLevel.cpp">
+		<ClCompile Include="src\Sprite.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
 		<ClCompile Include="..\..\..\Visual Studio 2017\of_v0.10.0_vs2017_release\addons\ofxGui\src\ofxBaseGui.cpp">
@@ -77,13 +77,13 @@
 		<ClInclude Include="src\ofApp.h">
 			<Filter>src</Filter>
 		</ClInclude>
+		<ClInclude Include="src\Emitter.h">
+			<Filter>src</Filter>
+		</ClInclude>
 		<ClInclude Include="src\HomeScreen.h">
 			<Filter>src</Filter>
 		</ClInclude>
 		<ClInclude Include="src\InGameScreen.h">
-			<Filter>src</Filter>
-		</ClInclude>
-		<ClInclude Include="src\LevelOne.h">
 			<Filter>src</Filter>
 		</ClInclude>
 		<ClInclude Include="src\ofApp.h">
@@ -92,7 +92,7 @@
 		<ClInclude Include="src\Screen.h">
 			<Filter>src</Filter>
 		</ClInclude>
-		<ClInclude Include="src\SelectLevel.h">
+		<ClInclude Include="src\Sprite.h">
 			<Filter>src</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\Visual Studio 2017\of_v0.10.0_vs2017_release\addons\ofxGui\src\ofxBaseGui.h">
