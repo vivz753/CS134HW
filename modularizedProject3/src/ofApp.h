@@ -4,8 +4,9 @@
 #include "HomeScreen.h"
 #include "InGameScreen.h"
 #include "Screen.h"
-#include "ofxGui.h"
+#include "Sprite.h"
 
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
 
@@ -51,4 +52,6 @@ class ofApp : public ofBaseApp{
 		Screen * screen;
 		HomeScreen * home = new HomeScreen();
 		InGameScreen * inGame = new InGameScreen();
+
+		
 };

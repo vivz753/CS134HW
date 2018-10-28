@@ -3,6 +3,8 @@
 #include "Screen.h"
 #include "ofMain.h"
 #include "ofxGui.h"
+#include "Emitter.h"
+#include "Sprite.h"
 
 typedef enum { Level1, Level2, Level3 } LevelType;
 
@@ -21,6 +23,11 @@ public:
 	ofImage background;
 	ofSoundPlayer bgMusic;
 	ofTrueTypeFont text;
+
+	vector<Emitter> emitters;
+	Sprite a = Sprite(A);
+	Sprite b = Sprite(B);
+	Sprite c = Sprite(C);
 
 	//create vector of emitters
 	//hp

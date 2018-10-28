@@ -1,7 +1,7 @@
 #pragma once
 #include "ofMain.h"
 
-typedef enum { enemyA, enemyB, enemyC, GUN, BULLET } SpriteType;
+typedef enum { A, B, C, WEAPON, BULLET } SpriteType;
 
 class Sprite {
 public:

@@ -7,7 +7,6 @@ Sprite::Sprite(SpriteType sType) {
 	trans = ofVec2f(250, 250);
 	width = 50;
 	height = 50;
-	haveImage = false;
 };
 
 void Sprite::draw() {
@@ -43,5 +42,4 @@ float Sprite::age() {
 
 void Sprite::setImage(ofImage i) {
 	image = i;
-	haveImage = true;
 };
