@@ -2,10 +2,14 @@
 #include "ofMain.h"
 #include "Sprite.h"
 
+typedef enum { EMITTERA, EMITTERB, EMITTERC, GUN } EmitterType;
+
 class Emitter : public Sprite {
 public:
-	Emitter();
+	Emitter(EmitterType);
+	EmitterType emitterType;
 	void init();
+	void draw();
 
 	void start();
 	void stop();

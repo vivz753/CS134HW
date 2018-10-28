@@ -5,6 +5,7 @@ typedef enum { A, B, C, WEAPON, BULLET } SpriteType;
 
 class Sprite {
 public:
+	Sprite();
 	Sprite(SpriteType);
 	SpriteType spriteType;
 
