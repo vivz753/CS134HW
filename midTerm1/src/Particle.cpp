@@ -7,14 +7,15 @@ Particle::Particle() {
 	//
 	velocity.set(0, 0, 0);
 	acceleration.set(0, 0, 0);
-	position.set(0, -3, 0);
+	position.set(0, 0, 0);
 	forces.set(0, 0, 0);
-	lifespan = 5;
+	lifespan = -1;
 	birthtime = 0;
-	radius = 3;
+	radius = .5;
 	damping = .99;
 	mass = 1;
 	color = ofColor::aquamarine;
+	cout << "particle initialized" << endl;
 }
 
 void Particle::draw() {

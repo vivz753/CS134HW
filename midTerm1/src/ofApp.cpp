@@ -19,6 +19,7 @@ void ofApp::setup(){
 	ps.add(p);
 	//ps.addForce(g);
 	ps.addForce(t);
+	ps.addForce(turb);
 
 	bWireframe = false;
 	bDisplayPoints = false;
@@ -74,14 +75,16 @@ void ofApp::setup(){
 
 void ofApp::update() {
 	ps.update();
-	lander.setPosition(p.position.x, p.position.y, p.position.z);
+	cout << ps.particles[0].position << endl;
+	ofVec3f location = ps.particles[0].position;
+	lander.setPosition(location.x, location.y, location.z);
 	//edit this
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
 
-	ps.draw();
+	
 
 	//	ofBackgroundGradient(ofColor(20), ofColor(0));   // pick your own backgroujnd
 	//	ofBackground(ofColor::black);
@@ -112,11 +115,21 @@ void ofApp::draw() {
 		}
 	}
 
+
 	
+	
+	//ofDrawSphere(ofVec3f(0, 0, 0), 5);
+	ps.draw();
+
 	ofPopMatrix();
+
+	
+
 	theCam->end();
 
+	
 
+	
 	
 
 	// draw screen data
@@ -160,10 +173,7 @@ void ofApp::drawAxis(ofVec3f location) {
 void ofApp::keyPressed(int key) {
 
 	switch (key) {
-	case 'a':
-		cout << "pushing a" << endl;
-		t->add(ofVec3f(0, 3, 0));
-		break;
+	
 	case 'C':
 	case 'c':
 		if (cam.getMouseInputEnabled()) cam.disableMouseInput();
@@ -215,16 +225,33 @@ void ofApp::keyPressed(int key) {
 	case OF_KEY_DEL:
 		break;
 	case OF_KEY_UP:
-		t->add(ofVec3f(0, 2, 0));
+		
+		if (bCtrlKeyDown) {
+			t->forward = true;
+			cout << "ctrl + up key pressed" << endl;
+		}
+		else if(!bCtrlKeyDown) {
+			t->up = true;
+			
+		}
 		break;
 	case OF_KEY_DOWN:
-		t->add(ofVec3f(0, -2, 0));
+
+		if (bCtrlKeyDown) {
+			cout << "ctrl + down key pressed" << endl;
+			t->back = true;
+		}
+		else if(!bCtrlKeyDown) {
+			t->down = true;
+			
+		}
+	
 		break;
 	case OF_KEY_LEFT:
-		t->add(ofVec3f(2, 0, 0));
+		t->left = true;
 		break;
 	case OF_KEY_RIGHT:
-		t->add(ofVec3f(0, 0, 2));
+		t -> right = true;
 		break;
 	default:
 		break;
@@ -242,14 +269,36 @@ void ofApp::togglePointsDisplay() {
 
 void ofApp::keyReleased(int key) {
 
-	switch (key) {
 	
+	switch (key) {
+	case OF_KEY_UP:
+		cout << "up key released" << endl;
+		t->up = false;
+		t->forward = false;
+		t->clear();
+		break;
+	case OF_KEY_DOWN:
+		
+		t->down = false;
+		t->back = false;
+		t->clear();
+		break;
+	case OF_KEY_LEFT:
+		t->left = false;
+		t->clear();
+		break;
+	case OF_KEY_RIGHT:
+		t->right = false;
+		t->clear();
+		break;
 	case OF_KEY_ALT:
 		cam.disableMouseInput();
 		bAltKeyDown = false;
 		break;
 	case OF_KEY_CONTROL:
 		bCtrlKeyDown = false;
+		t->forward = false;
+		t->back = false;
 		break;
 	case OF_KEY_SHIFT:
 		break;

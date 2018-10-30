@@ -35,13 +35,20 @@ public:
 //
 
 class ThrusterForce : public ParticleForce {
-	ofVec3f magnitude;
-	ofVec3f resultant;
 public:
-	ThrusterForce() { magnitude.set(2, 2, 2); resultant = ofVec3f(0, 0, 0); };
-	ThrusterForce(const ofVec3f & strength) { magnitude = strength; resultant = ofVec3f(0, 0, 0); };
+	ofVec3f resultant;
+	bool up, down, left, right, forward, back;
+	ThrusterForce() { resultant = ofVec3f(0, 0, 0); 
+	up = false;
+	down = false;
+	left = false;
+	right = false;
+	forward = false;
+	back = false;
+	};
 	void add(const ofVec3f movement) { resultant += movement; cout << "adding to thrusterforce" << endl; };
 	void updateForce(Particle *);
+	void clear() { resultant = ofVec3f(0, 0, 0); };
 };
 class GravityForce: public ParticleForce {
 	ofVec3f gravity;

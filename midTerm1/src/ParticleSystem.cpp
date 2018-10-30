@@ -5,6 +5,7 @@
 
 void ParticleSystem::add(const Particle &p) {
 	particles.push_back(p);
+	cout << "adding particle" << endl;
 }
 
 void ParticleSystem::addForce(ParticleForce *f) {
@@ -80,13 +81,35 @@ int ParticleSystem::removeNear(const ofVec3f & point, float dist) { return 0; }
 void ParticleSystem::draw() {
 	for (int i = 0; i < particles.size(); i++) {
 		particles[i].draw();
+		//cout << "drawing " << i << endl;
 	}
+
 }
 
 void ThrusterForce::updateForce(Particle * particle) {
-	
+	if (up) {
+		this->add(ofVec3f(0, .5, 0));
+	}
+	else if (down) {
+		this->add(ofVec3f(0, -.5, 0));
+	}
+	else if (left) {
+		this->add(ofVec3f(-.5, 0, 0));
+	}
+	else if (right) {
+		this->add(ofVec3f(.5, 0, 0));
+	}
+	else if (forward) {
+		cout << "going forward" << endl;
+		this->add(ofVec3f(0, 0, .5));
+	}
+	else if (back) {
+		cout << "going back" << endl;
+		this->add(ofVec3f(0, 0, -.5));
+	}
+	//cout << "thrusterforce: " << resultant << endl;
 	particle->forces += resultant;
-	cout << "thrusterforce: " << resultant << endl;
+	
 }
 
 

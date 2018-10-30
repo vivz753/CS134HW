@@ -53,11 +53,11 @@ class ofApp : public ofBaseApp{
 		bool bBackgroundLoaded = false;
 		bool bLanderLoaded = false;
 	
-		double gravity = -9.8;
 		ParticleSystem ps = ParticleSystem();
 		Particle p = Particle();
 		GravityForce * g = new GravityForce(ofVec3f(0, -9.8, 0));
 		ThrusterForce * t = new ThrusterForce();
+		TurbulenceForce * turb = new TurbulenceForce(ofVec3f(-.5, -.5, -.5), ofVec3f(.5, .5, .5));
 		
 		//create Turbulence force
 		
