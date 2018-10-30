@@ -39,9 +39,9 @@ void ParticleEmitter::init() {
 	fired = false;
 	lastSpawned = 0;
 	radius = 1;
-	particleRadius = .1;
+	particleRadius = .025;
 	visible = true;
-	type = DirectionalEmitter;
+	type = DiscEmitter;
 	groupSize = 1;
 	damping = .99;
 	particleColor = ofColor::red;
@@ -59,6 +59,10 @@ void ParticleEmitter::draw() {
 		case SphereEmitter:
 		case RadialEmitter:
 			ofDrawSphere(position, radius/10);  // just draw a small sphere as a placeholder
+			break;
+			//!!write DiscEmitter settings
+		case DiscEmitter:
+			ofDrawSphere(position, radius / 10);
 			break;
 		default:
 			break;
@@ -95,8 +99,8 @@ void ParticleEmitter::update() {
 		stop();
 	}
 
-	else if (((time - lastSpawned) > (1000.0 / rate)) && started) {
-
+	else if (((time - lastSpawned) > (60 / rate)) && started) {
+		cout << "shooting" << endl;
 		// spawn a new particle(s)
 		//
 		for (int i= 0; i < groupSize; i++)
@@ -118,6 +122,16 @@ void ParticleEmitter::spawn(float time) {
 	// based on emitter type
 	//
 	switch (type) {
+		
+	case DiscEmitter: {
+		ofVec3f direction = ofVec3f(ofRandom(-1, 1), 0, ofRandom(-1, 1));
+		ofVec3f circleRange = ofVec3f(ofRandom(-.25, .25), 0, ofRandom(-.25, .25));
+		//float speed = velocity.length();
+		//particle.velocity = speed * direction.getNormalized();
+		particle.position.set(position + circleRange);
+	}
+	
+		break;
 	case RadialEmitter:
 	  {
 		ofVec3f dir = ofVec3f(ofRandom(-1, 1), ofRandom(-1, 1), ofRandom(-1, 1));

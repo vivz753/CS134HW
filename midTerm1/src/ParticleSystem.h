@@ -46,7 +46,7 @@ public:
 	forward = false;
 	back = false;
 	};
-	void add(const ofVec3f movement) { resultant += movement; cout << "adding to thrusterforce" << endl; };
+	void add(const ofVec3f movement) { resultant += movement; };
 	void updateForce(Particle *);
 	void clear() { resultant = ofVec3f(0, 0, 0); };
 };
@@ -64,6 +64,17 @@ public:
 	void set(const ofVec3f &min, const ofVec3f &max) { tmin = min; tmax = max; }
 	TurbulenceForce(const ofVec3f & min, const ofVec3f &max);
 	TurbulenceForce() { tmin.set(0, 0, 0); tmax.set(0, 0, 0); }
+	void updateForce(Particle *);
+};
+
+class RadialForce : public ParticleForce {
+	float magnitude = 1.0;
+	float height = .2;
+public:
+	void set(float mag) { magnitude = mag; }
+	void setHeight(float h) { height = h; }
+	RadialForce(float magnitude);
+	RadialForce() {}
 	void updateForce(Particle *);
 };
 

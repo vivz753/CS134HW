@@ -7,6 +7,8 @@
 //
 //                                             (c) Kevin M. Smith  - 2018
 
+//Submitted by Vivian Leung, ID: 010229739, Date: October 30, 2018
+
 
 #include "ofApp.h"
 
@@ -15,11 +17,21 @@
 //
 void ofApp::setup(){
 
-	//add the particle
+	//intialize particle system to drive model
+	//add thruster force t & turbulence force turb
 	ps.add(p);
-	//ps.addForce(g);
 	ps.addForce(t);
 	ps.addForce(turb);
+
+	//initialize particle emitter w/ DiscEmitter type
+	pe.init();
+	pe.sys->addForce(turb);
+	pe.sys->addForce(g);
+	pe.sys->addForce(radialForce);
+	pe.setEmitterType(DiscEmitter);
+	pe.setGroupSize(10);
+	pe.setRandomLife(true);
+	//pe.setLifespanRange(ofVec2f(lifespanRange->x, lifespanRange->y));
 
 	bWireframe = false;
 	bDisplayPoints = false;
@@ -75,10 +87,12 @@ void ofApp::setup(){
 
 void ofApp::update() {
 	ps.update();
-	cout << ps.particles[0].position << endl;
+	//cout << ps.particles[0].position << endl;
 	ofVec3f location = ps.particles[0].position;
 	lander.setPosition(location.x, location.y, location.z);
-	//edit this
+	pe.setPosition(location);
+	pe.update();
+	
 }
 
 //--------------------------------------------------------------
@@ -118,13 +132,12 @@ void ofApp::draw() {
 
 	
 	
-	//ofDrawSphere(ofVec3f(0, 0, 0), 5);
+	//draw here
 	ps.draw();
+	pe.draw();
+
 
 	ofPopMatrix();
-
-	
-
 	theCam->end();
 
 	
@@ -221,6 +234,7 @@ void ofApp::keyPressed(int key) {
 		bCtrlKeyDown = true;
 		break;
 	case OF_KEY_SHIFT:
+		
 		break;
 	case OF_KEY_DEL:
 		break;
@@ -232,6 +246,7 @@ void ofApp::keyPressed(int key) {
 		}
 		else if(!bCtrlKeyDown) {
 			t->up = true;
+			pe.start();
 			
 		}
 		break;
@@ -273,6 +288,7 @@ void ofApp::keyReleased(int key) {
 	switch (key) {
 	case OF_KEY_UP:
 		cout << "up key released" << endl;
+		pe.stop();
 		t->up = false;
 		t->forward = false;
 		t->clear();
@@ -301,6 +317,7 @@ void ofApp::keyReleased(int key) {
 		t->back = false;
 		break;
 	case OF_KEY_SHIFT:
+		
 		break;
 	default:
 		break;

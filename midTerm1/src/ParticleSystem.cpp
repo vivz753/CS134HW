@@ -88,26 +88,25 @@ void ParticleSystem::draw() {
 
 void ThrusterForce::updateForce(Particle * particle) {
 	if (up) {
-		this->add(ofVec3f(0, .5, 0));
+		this->add(ofVec3f(0, .25, 0));
 	}
 	else if (down) {
-		this->add(ofVec3f(0, -.5, 0));
+		this->add(ofVec3f(0, -.25, 0));
 	}
 	else if (left) {
-		this->add(ofVec3f(-.5, 0, 0));
+		this->add(ofVec3f(-.25, 0, 0));
 	}
 	else if (right) {
-		this->add(ofVec3f(.5, 0, 0));
+		this->add(ofVec3f(.25, 0, 0));
 	}
 	else if (forward) {
-		cout << "going forward" << endl;
-		this->add(ofVec3f(0, 0, .5));
+
+		this->add(ofVec3f(0, 0, .25));
 	}
 	else if (back) {
-		cout << "going back" << endl;
-		this->add(ofVec3f(0, 0, -.5));
+
+		this->add(ofVec3f(0, 0, -.25));
 	}
-	//cout << "thrusterforce: " << resultant << endl;
 	particle->forces += resultant;
 	
 }
@@ -141,6 +140,16 @@ void TurbulenceForce::updateForce(Particle * particle) {
 	particle->forces.x += ofRandom(tmin.x, tmax.x);
 	particle->forces.y += ofRandom(tmin.y, tmax.y);
 	particle->forces.z += ofRandom(tmin.z, tmax.z);
+}
+
+RadialForce::RadialForce(float magnitude) {
+	this->magnitude = magnitude;
+	applyOnce = false;
+}
+
+void RadialForce::updateForce(Particle * particle) {
+	ofVec3f dir = ofVec3f(ofRandom(-1, 1), 0, ofRandom(-1, 1));
+	particle->forces += dir.getNormalized() * magnitude;
 }
 
 // Impulse Radial Force - this is a "one shot" force that

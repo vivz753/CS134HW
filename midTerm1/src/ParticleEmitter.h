@@ -4,7 +4,7 @@
 #include "TransformObject.h"
 #include "ParticleSystem.h"
 
-typedef enum { DirectionalEmitter, RadialEmitter, SphereEmitter } EmitterType;
+typedef enum { DirectionalEmitter, RadialEmitter, SphereEmitter, DiscEmitter } EmitterType;
 
 //  General purpose Emitter class for emitting sprites
 //  This works similar to a Particle emitter

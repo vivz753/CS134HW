@@ -58,15 +58,8 @@ class ofApp : public ofBaseApp{
 		GravityForce * g = new GravityForce(ofVec3f(0, -9.8, 0));
 		ThrusterForce * t = new ThrusterForce();
 		TurbulenceForce * turb = new TurbulenceForce(ofVec3f(-.5, -.5, -.5), ofVec3f(.5, .5, .5));
+		RadialForce * radialForce = new RadialForce();
 		
-		//create Turbulence force
-		
-		//p.add(TurbulenceForce);
-		//use this to simulate drag
-		//update this in ofApp::update()
-		//create custom Thruster force in ParticleForces
-
-
 		//simulate exhaust of engine
 		ParticleEmitter pe = ParticleEmitter();
 		//add DiscEmitter in the Emitter class
