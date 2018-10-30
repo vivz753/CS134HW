@@ -7,6 +7,24 @@
 		<ClCompile Include="src\main.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
+		<ClCompile Include="src\main.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="src\ofApp.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="src\Particle.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="src\ParticleEmitter.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="src\ParticleSystem.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="src\TransformObject.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
 		<ClCompile Include="..\..\..\Visual Studio 2017\of_v0.10.0_vs2017_release\addons\ofxAssimpModelLoader\src\ofxAssimpAnimation.cpp">
 			<Filter>addons\ofxAssimpModelLoader\src</Filter>
 		</ClCompile>
@@ -93,6 +111,21 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ClInclude Include="src\ofApp.h">
+			<Filter>src</Filter>
+		</ClInclude>
+		<ClInclude Include="src\ofApp.h">
+			<Filter>src</Filter>
+		</ClInclude>
+		<ClInclude Include="src\Particle.h">
+			<Filter>src</Filter>
+		</ClInclude>
+		<ClInclude Include="src\ParticleEmitter.h">
+			<Filter>src</Filter>
+		</ClInclude>
+		<ClInclude Include="src\ParticleSystem.h">
+			<Filter>src</Filter>
+		</ClInclude>
+		<ClInclude Include="src\TransformObject.h">
 			<Filter>src</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\Visual Studio 2017\of_v0.10.0_vs2017_release\addons\ofxAssimpModelLoader\src\ofxAssimpAnimation.h">
