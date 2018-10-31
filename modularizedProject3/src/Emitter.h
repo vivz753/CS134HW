@@ -14,6 +14,11 @@ public:
 	float lastSpawned;
 	bool emitting;
 
+	//for gun emitters only
+	bool moving;
+	ofVec3f movingVector;
+
+	Emitter();
 	Emitter(EmitterType);
 	EmitterType emitterType;
 	void init();
@@ -25,8 +30,10 @@ public:
 	void setVelocity(ofVec3f);
 	void setrate(float);
 	void update();
+
 	void translate(int, int);
 	void translate(ofVec3f);
+
 	float maxdistperframe();
 	bool collided(ofVec3f, float);
 

@@ -18,11 +18,17 @@ public:
 	void init();
 	void draw();
 	void update();
+
 	void keyPressed(int);
+	void keyReleased(int);
+	void mouseMoved(int, int);
+
 	void terminate();
 	ofImage background;
 	ofSoundPlayer bgMusic;
 	ofTrueTypeFont text;
+
+	Emitter gunEmitter;
 
 	vector<Emitter> emitters;
 	Sprite a = Sprite(A);

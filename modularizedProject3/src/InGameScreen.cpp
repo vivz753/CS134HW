@@ -5,6 +5,10 @@ InGameScreen::InGameScreen() {
 	
 	screenType = INGAME;
 	levelType = Level1;
+
+	gunEmitter = Emitter(GUN);
+	gunEmitter.init();
+	emitters.push_back(gunEmitter);
 	//init();
 
 };
@@ -36,9 +40,7 @@ void InGameScreen::setLevel(int level) {
 void InGameScreen::init()
 {
 	//always create a gun emitter
-	Emitter gun = Emitter(GUN);
-	gun.init();
-	emitters.push_back(gun);
+	
 
 	switch (levelType) {
 	case Level1:
@@ -81,39 +83,91 @@ void InGameScreen::draw()
 
 	switch (levelType) {
 	case Level1:
-		a.draw();
+		//a.draw();
 		text.drawString("level 1; press q to quit", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
 	case Level2:
-		b.draw();
+		//b.draw();
 		text.drawString("level 2; press q to quit", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
 	case Level3:
-		c.draw();
+		//c.draw();
 		text.drawString("level 3; press q to quit", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
 	}
 	
-	for (int i = 0; i < emitters.size(); i++) {
+	for (size_t i = 0; i < emitters.size(); i++) {
 		emitters[i].draw();
 	}
 
 };
 
 void InGameScreen::update() {
-	//if levelType=1 & beat=true, levelType = Level2
-	//cout << "level screen updating" << endl;
+	
+	for (size_t i = 0; i < emitters.size(); i++) {
+		emitters[i].update();
+	}
+
 };
 
 void InGameScreen::keyPressed(int key) {
 	switch (key) {
 	case ' ':
-		cout << "pressing space in game" << endl;
+		//cout << "pressing space in game" << endl;
+		emitters[0].emitting = true;
 		break;
 	case 'q':
-		cout << "pressing q in game" << endl;
+		//cout << "pressing q in game" << endl;
 		transition = true;
 		transitionScreen = HOME;
 		break;
+	/*case 'w':
+		gunEmitter.moving = true;
+		gunEmitter.movingVector += ofVec3f(0, -300, 0);
+		cout << "w pressed " << endl;
+		break;
+	case 'a':
+		gunEmitter.moving = true;
+		gunEmitter.movingVector += ofVec3f(0, 300, 0);
+		break;
+	case 's':
+		gunEmitter.moving = true;
+		gunEmitter.movingVector += ofVec3f(-300, 0, 0);
+		break;
+	case 'd':
+		gunEmitter.moving = true;
+		gunEmitter.movingVector += ofVec3f(300, 0, 0);
+		break;*/
 	}
 };
+
+void InGameScreen::keyReleased(int key) {
+	/*switch (key) {
+	case ' ':
+		cout << "released space in game" << endl;
+		break;
+	case 'w':
+		cout << "w released" << endl;
+		gunEmitter.movingUp = false;
+		gunEmitter.movingVector.y = 0;
+		break;
+	case 'a':
+		gunEmitter.movingLeft = false;
+		gunEmitter.movingVector.y = 0;
+		break;
+	case 's':
+		gunEmitter.movingDown = false;
+		gunEmitter.movingVector.x = 0;
+		break;
+	case 'd':
+		gunEmitter.movingRight = false;
+		gunEmitter.movingVector.x = 0;
+		break;
+	}*/
+};
+
+void InGameScreen::mouseMoved(int x, int y) {
+	//cout << "mouse moving: " << x << ", " << y << endl;
+	
+	emitters[0].translate(x, y);
+}

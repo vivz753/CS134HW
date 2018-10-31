@@ -1,10 +1,14 @@
 #include "Emitter.h"
 
+Emitter::Emitter() {
+	sys = new SpriteSystem();
+	emitting = false;
+}
 
 Emitter::Emitter(EmitterType eType) {
 	emitterType = eType;
 	sys = new SpriteSystem();
-
+	emitting = false;
 };
 
 void Emitter::setPosition(ofVec3f p) {
@@ -29,11 +33,12 @@ void Emitter::init() {
 		rate = 5;
 		break;
 	case GUN:
-		trans = ofVec3f(20, 20, 0);
+		trans = ofVec3f(400, 400, 0);
 		width = 50;
 		height = 50;
 		rate = 5;
 		lifespan = 5;
+		velocity = ofVec3f(0, -500, 0);
 		parentImage.load("bow.png");
 		childImage.load("arrow.png");
 		cout << "gun init" << endl;
@@ -46,7 +51,7 @@ void Emitter::init() {
 void Emitter::draw() {
 	if (emitterType = GUN) {
 		parentImage.draw(trans, width, height);
-		cout << "drawing gun at: " << trans << endl;
+		
 	}
 	sys->draw();
 };
@@ -89,6 +94,7 @@ void Emitter::shoot() {
 	ofVec3f centered = ofVec3f(trans.x + width / 2 - sprite->width / 2, trans.y);
 	sprite->setPosition(centered);
 
+	
 	sprite->lifespan = lifespan;
 	sprite->velocity = velocity;
 	
@@ -108,6 +114,9 @@ void Emitter::update() {
 				shoot();
 			}
 		}
+		/*if (moving) {
+			translate(movingVector);
+		}*/
 		break;
 	case EMITTERA:
 		break;
@@ -115,6 +124,22 @@ void Emitter::update() {
 		break;
 	case EMITTERC:
 		break;
-
 	}
-}
+	sys->update();
+};
+
+//translate the Emitter with mouse coordinates
+void Emitter::translate(int x, int y) {
+	if (x < (ofGetWindowWidth() - width) && x > 0 && y < (ofGetWindowHeight() - height) && y >0) {
+		trans.x = x;
+		trans.y = y;
+	}
+};
+
+////translate the Emitter using WASD keys
+//void Emitter::translate(ofVec3f v) {
+//	ofVec3f newPos = trans + v / ofGetFrameRate();
+//	if (newPos.x < (ofGetWindowWidth() - width) && newPos.x>0 && newPos.y < (ofGetWindowHeight() - height) && newPos.y>0) {
+//		trans += v / ofGetFrameRate();
+//	}
+//};

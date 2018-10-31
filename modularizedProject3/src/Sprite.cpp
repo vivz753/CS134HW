@@ -5,6 +5,8 @@ Sprite::Sprite(SpriteType sType) {
 
 	//hardcoded
 	trans = ofVec2f(250, 250);
+	velocity = ofVec3f(0,0,0);
+	lifespan = 0;
 	width = 50;
 	height = 50;
 };
