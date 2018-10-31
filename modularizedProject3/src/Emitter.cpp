@@ -3,33 +3,44 @@
 
 Emitter::Emitter(EmitterType eType) {
 	emitterType = eType;
-	sys = SpriteSystem();
+	sys = new SpriteSystem();
 	lifespan;
 	velocity;
-}
+};
 
 void Emitter::init() {
-	switch (emitterType) {
-	case EMITTERA:
-		//set sprites 
-		break;
-	case EMITTERB:
-		break;
-	case EMITTERC:
-		break;
-
-	case GUN:
-		//set image of gun 
-		break;
-	}
+	//switch (emitterType) {
+	//case EMITTERA:
+	//	childImage.load("cookie.png");
+	//	setChildImage(childImage);
+	//	//set sprites 
+	//	break;
+	//case EMITTERB:
+	//	childImage.load("skull.png");
+	//	setChildImage(childImage);
+	//	break;
+	//case EMITTERC:
+	//	childImage.load("pokeball.png");
+	//	setChildImage(childImage);
+	//	break;
+	//case GUN:
+	//	gunImage.load("bow.png");
+	//	setImage(gunImage);
+	//	childImage.load("arrow.png");
+	//	setChildImage(childImage);
+	//	//set image of gun 
+	//	break;
+	//}
+	//
+	
 }
 
 void Emitter::draw() {
 	if (emitterType = GUN) {
-		image.draw(trans, width, height);
+		gunImage.draw(trans, width, height);
 	}
-	sys.draw();
-}
+	sys->draw();
+};
 
 void Emitter::shoot() {
 	
@@ -61,7 +72,7 @@ void Emitter::shoot() {
 	//set image based on type of enemy emitter
 	
 	sprite->birthtime = ofGetElapsedTimeMillis();
-	sys.add(*sprite);
-}
+	sys->add(*sprite);
+};
 
 
