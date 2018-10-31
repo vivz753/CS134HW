@@ -4,8 +4,16 @@
 
 typedef enum { EMITTERA, EMITTERB, EMITTERC, GUN } EmitterType;
 
-class Emitter : public Sprite {
+class Emitter {
 public:
+	ofVec3f trans;
+	void setPosition(ofVec3f);
+	float width, height;
+	ofImage parentImage;
+	ofImage childImage;
+	float lastSpawned;
+	bool emitting;
+
 	Emitter(EmitterType);
 	EmitterType emitterType;
 	void init();
@@ -13,23 +21,21 @@ public:
 	void shoot();
 	void start();
 	void stop();
-	/*void setLifespan(float);
+	void setLifespan(float);
 	void setVelocity(ofVec3f);
-	void setChildImage(ofImage);
-	void setImage(ofImage);
-	void setRate(float);
+	void setrate(float);
 	void update();
 	void translate(int, int);
 	void translate(ofVec3f);
-	float maxDistPerFrame();
-	bool collided(ofVec3f, float);*/
+	float maxdistperframe();
+	bool collided(ofVec3f, float);
 
 	bool shooting;
 	SpriteSystem *sys;
 	float rate;
-	bool started;
-	float lastSpawned;
-	ofImage childImage;
-	ofImage gunImage;
+	//bool started;
+	float lifespan;
+	ofVec3f velocity;
+
 	
 };

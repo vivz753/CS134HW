@@ -13,23 +13,21 @@ void Sprite::draw() {
 	switch (spriteType) {
 	case A:
 		//set appearance
-		ofSetColor(ofColor::blue);
+		image.load("cookie.png");
 
-		//setImage(imageA)
 		break;
 	case B:
-		ofSetColor(ofColor::red);
-		//setImage(imageB)
+		image.load("pokeball.png");
 		break;
 	case C:
-		ofSetColor(ofColor::white);
-		//setImage(imageC)
+		image.load("dragonball.png");
+		break;
+	case BULLET:
+		image.load("arrow.png");
 		break;
 	}
-
-	ofDrawRectangle(trans, width, height);
-
-	//image.draw(trans, width, height);
+	
+	image.draw(trans, width, height);
 };
 
 void Sprite::setPosition(ofVec3f p) {

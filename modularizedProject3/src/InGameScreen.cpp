@@ -35,15 +35,22 @@ void InGameScreen::setLevel(int level) {
 
 void InGameScreen::init()
 {
+	//always create a gun emitter
+	Emitter gun = Emitter(GUN);
+	gun.init();
+	emitters.push_back(gun);
 
 	switch (levelType) {
 	case Level1:
+		//create emitter A
 		cout << "switched to level 1" << endl;
 		break;
 	case Level2:
+		//create emitter A & B
 		cout << "switched to level 2" << endl;
 		break;
 	case Level3:
+		//create emitter A & B & C
 		cout << "switched to level 3" << endl;
 		break;
 	}
@@ -87,6 +94,9 @@ void InGameScreen::draw()
 		break;
 	}
 	
+	for (int i = 0; i < emitters.size(); i++) {
+		emitters[i].draw();
+	}
 
 };
 
