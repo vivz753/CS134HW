@@ -3,21 +3,15 @@
 
 InGameScreen::InGameScreen() {
 	
+	//initial settings
 	screenType = INGAME;
 	levelType = Level1;
 
-	gunEmitter = Emitter(GUN);
-	gunEmitter.init();
-	emitters.push_back(gunEmitter);
-	//init();
 
+	//playerScore is a global variable throughout the levels
+	playerScore = 0;
 };
 
-//InGameScreen::InGameScreen(LevelName lname) {
-//	levelName = lname;
-//	init();
-//
-//};
 
 void InGameScreen::setLevel(LevelType level) {
 	levelType = level;
@@ -39,19 +33,33 @@ void InGameScreen::setLevel(int level) {
 
 void InGameScreen::init()
 {
-	//always create a gun emitter
+	//player HP gets reset at each level
+	gunEmitter.hp = 500;
+
+	//only create the gunEmitter once
+	gunEmitter = Emitter(GUN);
+	gunEmitter.init();
+	//emitters.push_back(gunEmitter);
 	
+	Emitter emitterA = Emitter(EMITTERA);
+	Emitter emitterB = Emitter(EMITTERB);
+	Emitter emitterC = Emitter(EMITTERC);
 
 	switch (levelType) {
 	case Level1:
-		//create emitter A
+		emitterA.init();
+		emitters.push_back(emitterA);
 		cout << "switched to level 1" << endl;
 		break;
 	case Level2:
+		emitterB.init();
+		emitters.push_back(emitterB);
 		//create emitter A & B
 		cout << "switched to level 2" << endl;
 		break;
 	case Level3:
+		emitterC.init();
+		emitters.push_back(emitterC);
 		//create emitter A & B & C
 		cout << "switched to level 3" << endl;
 		break;
@@ -68,22 +76,30 @@ void InGameScreen::init()
 };
 
 void InGameScreen::terminate() {
+
+	//stop music, reset transition variable
 	bgMusic.stop();
 	transition = false;
+
+	//stop emitters from firing
+	gunEmitter.stop();
+	for (size_t i = 0; i < emitters.size(); i++) {
+		emitters[i].emitting = false;
+	}
+
 }
 
 void InGameScreen::draw()
 {
 	//draw background image
-
 	background.resize(ofGetWindowWidth(), ofGetWindowHeight());
 	background.draw(0, 0);
-
-
+	text.drawString(to_string(gunEmitter.hp), 50, 50);
 
 	switch (levelType) {
 	case Level1:
 		//a.draw();
+		//draw emitter A only
 		text.drawString("level 1; press q to quit", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
 	case Level2:
@@ -95,7 +111,8 @@ void InGameScreen::draw()
 		text.drawString("level 3; press q to quit", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
 	}
-	
+
+	gunEmitter.draw();
 	for (size_t i = 0; i < emitters.size(); i++) {
 		emitters[i].draw();
 	}
@@ -104,8 +121,41 @@ void InGameScreen::draw()
 
 void InGameScreen::update() {
 	
+	gunEmitter.update();
 	for (size_t i = 0; i < emitters.size(); i++) {
 		emitters[i].update();
+	}
+
+	//check if bullets hit enemy sprites
+	checkCollisions();
+
+	switch (levelType) {
+	
+	case Level1:
+		break;
+	case Level2:
+		break;
+	case Level3:
+		break;
+	}
+
+	//if hp hits 0 or below, transition the screen to home
+	if (gunEmitter.hp <= 0) {
+		transition = true;
+		transitionScreen = HOME;
+
+	}
+
+
+};
+
+void InGameScreen::checkCollisions() {
+	for (int i = 0; i < emitters.size(); i++) {
+		//checks if bullets hit emitter enemy sprites
+		gunEmitter.sys->checkCollisions(emitters[i].sys);
+
+		//checks if emitter enemy sprites hit the gun emitter
+		gunEmitter.checkCollision(emitters[i].sys);
 	}
 
 };
@@ -113,8 +163,11 @@ void InGameScreen::update() {
 void InGameScreen::keyPressed(int key) {
 	switch (key) {
 	case ' ':
-		//cout << "pressing space in game" << endl;
-		emitters[0].emitting = true;
+		//start all the emitters 
+		gunEmitter.start();
+		for (size_t i = 0; i < emitters.size(); i++) {
+			emitters[i].start();
+		}
 		break;
 	case 'q':
 		//cout << "pressing q in game" << endl;
@@ -142,32 +195,34 @@ void InGameScreen::keyPressed(int key) {
 };
 
 void InGameScreen::keyReleased(int key) {
-	/*switch (key) {
+	switch (key) {
 	case ' ':
-		cout << "released space in game" << endl;
+			//only stop the gunEmitter from firing when space is released
+		gunEmitter.stop();
+		
 		break;
-	case 'w':
-		cout << "w released" << endl;
-		gunEmitter.movingUp = false;
+	/*case 'w':
+		
 		gunEmitter.movingVector.y = 0;
 		break;
 	case 'a':
-		gunEmitter.movingLeft = false;
+	
 		gunEmitter.movingVector.y = 0;
 		break;
 	case 's':
-		gunEmitter.movingDown = false;
+		
 		gunEmitter.movingVector.x = 0;
 		break;
 	case 'd':
-		gunEmitter.movingRight = false;
 		gunEmitter.movingVector.x = 0;
-		break;
-	}*/
+		break;*/
+	}
+	
+	
 };
 
 void InGameScreen::mouseMoved(int x, int y) {
 	//cout << "mouse moving: " << x << ", " << y << endl;
 	
-	emitters[0].translate(x, y);
+	gunEmitter.translate(x, y);
 }

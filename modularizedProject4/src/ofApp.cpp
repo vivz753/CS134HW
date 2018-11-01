@@ -37,12 +37,12 @@ void ofApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-
+	screen->keyReleased(key);
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
-
+	screen->mouseMoved(x, y);
 }
 
 //--------------------------------------------------------------

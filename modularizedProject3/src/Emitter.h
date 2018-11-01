@@ -1,6 +1,7 @@
 #pragma once
 #include "ofMain.h"
 #include "Sprite.h"
+class SpriteSystem;
 
 typedef enum { EMITTERA, EMITTERB, EMITTERC, GUN } EmitterType;
 
@@ -13,6 +14,7 @@ public:
 	ofImage childImage;
 	float lastSpawned;
 	bool emitting;
+	float hp;
 
 	//for gun emitters only
 	bool moving;
@@ -30,19 +32,19 @@ public:
 	void setVelocity(ofVec3f);
 	void setrate(float);
 	void update();
+	void checkCollision(SpriteSystem *);
 
 	void translate(int, int);
 	void translate(ofVec3f);
 
-	float maxdistperframe();
-	bool collided(ofVec3f, float);
-
 	bool shooting;
-	SpriteSystem *sys;
+	SpriteSystem * sys;
 	float rate;
 	//bool started;
 	float lifespan;
 	ofVec3f velocity;
+
+	ofRectangle rectangle;
 
 	
 };

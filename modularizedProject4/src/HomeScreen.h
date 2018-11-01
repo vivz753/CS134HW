@@ -15,8 +15,12 @@ public:
 	void init();
 	void draw();
 	void update();
-	void keyPressed(int);
 	void terminate();
+
+	void keyPressed(int);
+	void keyReleased(int);
+	void mouseMoved(int, int);
+
 	ofImage background;
 	ofSoundPlayer bgMusic;
 	ofTrueTypeFont text;

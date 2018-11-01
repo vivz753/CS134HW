@@ -9,26 +9,29 @@ Sprite::Sprite(SpriteType sType) {
 	lifespan = 0;
 	width = 50;
 	height = 50;
+	rectangle = ofRectangle(trans, width, height);
 };
 
-void Sprite::draw() {
-	switch (spriteType) {
-	case A:
-		//set appearance
-		image.load("cookie.png");
+void Sprite::init() {
+	//switch (spriteType) {
+	//case A:
+	//	//set appearance, velocity, lifepspan, width, height
+	//	image.load("cookie.png");
+	//	break;
+	//case B:
+	//	image.load("pokeball.png");
+	//	break;
+	//case C:
+	//	image.load("dragonball.png");
+	//	break;
+	//case BULLET:
+	//	image.load("arrow.png");
+	//	break;
+	//}
 
-		break;
-	case B:
-		image.load("pokeball.png");
-		break;
-	case C:
-		image.load("dragonball.png");
-		break;
-	case BULLET:
-		image.load("arrow.png");
-		break;
-	}
-	
+}
+
+void Sprite::draw() {
 	image.draw(trans, width, height);
 };
 

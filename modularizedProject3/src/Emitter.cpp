@@ -3,6 +3,7 @@
 Emitter::Emitter() {
 	sys = new SpriteSystem();
 	emitting = false;
+	rectangle = ofRectangle(ofVec3f(0, 0, 0), 0, 0);
 }
 
 Emitter::Emitter(EmitterType eType) {
@@ -18,9 +19,17 @@ void Emitter::setPosition(ofVec3f p) {
 void Emitter::init() {
 	switch (emitterType) {
 	case EMITTERA:
-		//childImage.load("cookie.png");
+		
 		trans = ofVec3f(20, 20, 0);
+		width = 50;
+		height = 50;
 		rate = 5;
+		lifespan = 1500;
+		velocity = ofVec3f(0, 300, 0);
+		//delete parentImagelater
+		//parentImage.load("cookie.png");
+		childImage.load("cookie.png");
+		cout << "emitter a init" << endl;
 		
 		//set sprites 
 		break;
@@ -33,15 +42,18 @@ void Emitter::init() {
 		rate = 5;
 		break;
 	case GUN:
+		hp = 500;
 		trans = ofVec3f(400, 400, 0);
 		width = 50;
 		height = 50;
 		rate = 5;
-		lifespan = 5;
-		velocity = ofVec3f(0, -500, 0);
+		lifespan = 1500;
+		velocity = ofVec3f(0, -300, 0);
 		parentImage.load("bow.png");
 		childImage.load("arrow.png");
 		cout << "gun init" << endl;
+
+		rectangle = ofRectangle(trans, width, height);
  		break;
 	}
 	
@@ -50,6 +62,7 @@ void Emitter::init() {
 
 void Emitter::draw() {
 	if (emitterType = GUN) {
+		ofDrawRectangle(rectangle.getPosition(), rectangle.getHeight(), rectangle.getWidth());
 		parentImage.draw(trans, width, height);
 		
 	}
@@ -72,6 +85,7 @@ void Emitter::shoot() {
 	switch (emitterType) {
 	case EMITTERA:
 		sprite = new Sprite(A);
+		
 		/*lifespan = 5;
 		velocity = ofVec3f(0, -5, 0);*/
 		break;
@@ -90,7 +104,11 @@ void Emitter::shoot() {
 		break;
 	}	
 
-	
+	//sets the image
+	sprite->setImage(childImage);
+	//sprite->init();
+
+	//centers the position of the childSprite to come out of the center of the emitter
 	ofVec3f centered = ofVec3f(trans.x + width / 2 - sprite->width / 2, trans.y);
 	sprite->setPosition(centered);
 
@@ -98,8 +116,6 @@ void Emitter::shoot() {
 	sprite->lifespan = lifespan;
 	sprite->velocity = velocity;
 	
-
-	//set image based on type of enemy emitter
 	lastSpawned = ofGetElapsedTimeMillis();
 	sprite->birthtime = lastSpawned;
 	sys->add(*sprite);
@@ -114,15 +130,27 @@ void Emitter::update() {
 				shoot();
 			}
 		}
+
+		rectangle.setPosition(trans);
+
 		/*if (moving) {
 			translate(movingVector);
 		}*/
 		break;
 	case EMITTERA:
+		if (emitting) {
+
+		}
 		break;
 	case EMITTERB:
+		if (emitting) {
+
+		}
 		break;
 	case EMITTERC:
+		if (emitting) {
+
+		}
 		break;
 	}
 	sys->update();
@@ -136,6 +164,8 @@ void Emitter::translate(int x, int y) {
 	}
 };
 
+
+
 ////translate the Emitter using WASD keys
 //void Emitter::translate(ofVec3f v) {
 //	ofVec3f newPos = trans + v / ofGetFrameRate();
@@ -143,3 +173,14 @@ void Emitter::translate(int x, int y) {
 //		trans += v / ofGetFrameRate();
 //	}
 //};
+
+void Emitter::checkCollision(SpriteSystem * enemySprites) {
+	for (vector<Sprite>::iterator i = enemySprites->sprites.begin(); i != enemySprites->sprites.end(); i++) {
+		if (i->rectangle.intersects(rectangle)) {
+			i->lifespan = 1;
+			hp -= 15;
+		}
+		
+	}
+
+};

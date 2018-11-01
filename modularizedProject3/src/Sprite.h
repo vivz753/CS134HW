@@ -8,6 +8,7 @@ public:
 	Sprite();
 	Sprite(SpriteType);
 	SpriteType spriteType;
+	void init();
 
 	float width, height;
 	ofImage image;
@@ -25,6 +26,8 @@ public:
 	ofVec3f velocity;
 	
 	string name;
+
+	ofRectangle rectangle;
 	
 };
 
@@ -32,45 +35,44 @@ class SpriteSystem {
 public:
 	vector<Sprite> sprites;
 
-	void add(Sprite s) {
+	void SpriteSystem::add(Sprite s) {
 		sprites.push_back(s);
 		s.name = "s" + to_string(sprites.size());
 	};
 
-	void remove(int i) {
+	void SpriteSystem::remove(int i) {
 		sprites.erase(sprites.begin() + i);
 	};
 
-	void remove(vector<Sprite>::iterator & i) {
+	void SpriteSystem::remove(vector<Sprite>::iterator & i) {
 		i->lifespan = 1;
 	};
 
-	bool collided(ofVec3f point, float dist) {
-		vector<Sprite>::iterator s = sprites.begin();
-		while (s != sprites.end()) {
-			ofVec3f v = s->trans - point;
-			if (v.length() < dist) {
-				return true;
+
+	////check if this SpriteSystem's sprites' rectangles (enemies) collid with an Emitter's rectangle
+	//void checkCollisions(ofRectangle emitterRectangle) {
+	//	for (vector<Sprite>::iterator i = sprites.begin(); i != sprites.end(); i++) {
+	//		if (i->rectangle.intersects(emitterRectangle)) {
+	//			i->lifespan = 1;
+	//		}
+	//	}
+	//}
+
+	//check if this SpriteSystem's sprites (bullets) collide with another SpriteSystem's sprites (enemies)
+	void SpriteSystem::checkCollisions(SpriteSystem * enemySprites) {
+		for (vector<Sprite>::iterator i = sprites.begin(); i != sprites.end(); i++) {
+			for (vector<Sprite>::iterator j = enemySprites->sprites.begin(); j != enemySprites->sprites.end(); j++) {
+				if (i->rectangle.intersects(j->rectangle)) {
+					i->lifespan = 1;
+					j->lifespan = 1;
+				}
 			}
 		}
-	};
+	
+	}
 
-	bool removeNear(ofVec3f point, float dist) {
-		bool erased = false;
-		vector<Sprite>::iterator s = sprites.begin();
 
-		while (s != sprites.end()) {
-			ofVec3f v = s->trans - point;
-			if (v.length() < 50) {
-				s = sprites.erase(s);
-				erased = true;
-			}
-			else s++;
-		}
-		return erased;
-	};
-
-	void update() {
+	void SpriteSystem::update() {
 		if (sprites.size() == 0) return;
 		vector<Sprite>::iterator s = sprites.begin();
 		vector <Sprite>::iterator tmp;
@@ -90,6 +92,9 @@ public:
 
 		for (size_t i = 0; i < sprites.size(); i++) {
 			sprites[i].trans += sprites[i].velocity / ofGetFrameRate();
+
+			//testing rectangle of sprites
+			sprites[i].rectangle.setPosition(sprites[i].trans);
 			//cout << "trans: " << sprites[i].trans << endl;
 		}
 
@@ -99,9 +104,14 @@ public:
 
 	};
 
-	void draw() {
+	void SpriteSystem::draw() {
 		for (size_t i = 0; i < sprites.size(); i++) {
+			
+			//eventually delete to make square invisible
+			ofDrawRectangle(sprites[i].rectangle.getPosition(), sprites[i].rectangle.getHeight(), sprites[i].rectangle.getWidth());
+
 			sprites[i].draw();
+
 		}
 		//cout << "drawing" << endl;
 	};

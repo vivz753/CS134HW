@@ -3,6 +3,7 @@
 #include "Screen.h"
 #include "ofMain.h"
 #include "ofxGui.h"
+#include "Emitter.h"
 #include "Sprite.h"
 
 typedef enum { Level1, Level2, Level3 } LevelType;
@@ -15,15 +16,25 @@ public:
 	void setLevel(LevelType);
 	void setLevel(int);
 	void init();
+	void terminate();
 	void draw();
 	void update();
+
+	void checkCollisions();
+
 	void keyPressed(int);
-	void terminate();
+	void keyReleased(int);
+	void mouseMoved(int, int);
+
+	float playerScore;
+	
 	ofImage background;
 	ofSoundPlayer bgMusic;
 	ofTrueTypeFont text;
 
-	//vector<Emitter> emitters;
+	Emitter gunEmitter;
+
+	vector<Emitter> emitters;
 	Sprite a = Sprite(A);
 	Sprite b = Sprite(B);
 	Sprite c = Sprite(C);

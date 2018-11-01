@@ -16,14 +16,18 @@ public:
 	void setLevel(LevelType);
 	void setLevel(int);
 	void init();
+	void terminate();
 	void draw();
 	void update();
+
+	void checkCollisions();
 
 	void keyPressed(int);
 	void keyReleased(int);
 	void mouseMoved(int, int);
 
-	void terminate();
+	float playerScore;
+	
 	ofImage background;
 	ofSoundPlayer bgMusic;
 	ofTrueTypeFont text;
