@@ -49,26 +49,21 @@ public:
 	};
 
 
-	////check if this SpriteSystem's sprites' rectangles (enemies) collid with an Emitter's rectangle
-	//void checkCollisions(ofRectangle emitterRectangle) {
-	//	for (vector<Sprite>::iterator i = sprites.begin(); i != sprites.end(); i++) {
-	//		if (i->rectangle.intersects(emitterRectangle)) {
-	//			i->lifespan = 1;
-	//		}
-	//	}
-	//}
+
 
 	//check if this SpriteSystem's sprites (bullets) collide with another SpriteSystem's sprites (enemies)
-	void SpriteSystem::checkCollisions(SpriteSystem * enemySprites) {
+	float SpriteSystem::checkCollisions(SpriteSystem * enemySprites) {
+		float score = 0;
 		for (vector<Sprite>::iterator i = sprites.begin(); i != sprites.end(); i++) {
 			for (vector<Sprite>::iterator j = enemySprites->sprites.begin(); j != enemySprites->sprites.end(); j++) {
 				if (i->rectangle.intersects(j->rectangle)) {
 					i->lifespan = 1;
 					j->lifespan = 1;
+					score += 50;
 				}
 			}
 		}
-	
+		return score;
 	}
 
 

@@ -14,19 +14,25 @@ InGameScreen::InGameScreen() {
 
 
 void InGameScreen::setLevel(LevelType level) {
+	//every time we change levels, terminate the current settings, and then init()
+	//terminate();
 	levelType = level;
+	//init();
 };
 
 void InGameScreen::setLevel(int level) {
 	switch (level) {
 	case 1:
-		levelType = Level1;
+		setLevel(Level1);
+		//levelType = Level1;
 		break;
 	case 2:
-		levelType = Level2;
+		setLevel(Level2);
+		//levelType = Level2;
 		break;
 	case 3:
-		levelType = Level3;
+		setLevel(Level1);
+		//levelType = Level3;
 		break;
 	}
 }
@@ -87,6 +93,8 @@ void InGameScreen::terminate() {
 		emitters[i].emitting = false;
 	}
 
+	//emitters.clear();
+
 }
 
 void InGameScreen::draw()
@@ -95,6 +103,7 @@ void InGameScreen::draw()
 	background.resize(ofGetWindowWidth(), ofGetWindowHeight());
 	background.draw(0, 0);
 	text.drawString(to_string(gunEmitter.hp), 50, 50);
+	text.drawString(to_string(playerScore), 50, 150);
 
 	switch (levelType) {
 	case Level1:
@@ -146,13 +155,18 @@ void InGameScreen::update() {
 
 	}
 
+	//if (playerScore = 500) {
+	//	setLevel(Level2);
+	//}
+
 
 };
 
 void InGameScreen::checkCollisions() {
 	for (int i = 0; i < emitters.size(); i++) {
 		//checks if bullets hit emitter enemy sprites
-		gunEmitter.sys->checkCollisions(emitters[i].sys);
+		playerScore += gunEmitter.sys->checkCollisions(emitters[i].sys);
+		
 
 		//checks if emitter enemy sprites hit the gun emitter
 		gunEmitter.checkCollision(emitters[i].sys);
