@@ -1,5 +1,6 @@
 #include "InGameScreen.h"
-
+#include <cmath>
+#include <iostream>
 
 InGameScreen::InGameScreen() {
 	
@@ -119,6 +120,8 @@ void InGameScreen::draw()
 	text.drawString(to_string(gunEmitter.hp), 50, 50);
 	text.drawString(to_string(playerScore), 50, 150);
 
+	
+
 	switch (levelType) {
 	case Level1:
 		//a.draw();
@@ -144,6 +147,7 @@ void InGameScreen::draw()
 
 void InGameScreen::update() {
 	
+
 	gunEmitter.update();
 	for (size_t i = 0; i < emitters.size(); i++) {
 		emitters[i].update();

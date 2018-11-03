@@ -35,12 +35,14 @@ void Emitter::init() {
 		break;
 	case EMITTERB:
 		//childImage.load("skull.png");
+
+
 		trans = ofVec3f(20, 0, 0);
 		width = 50;
 		height = 50;
-		rate = 5;
-		lifespan = 1500;
-		velocity = ofVec3f(0, 300, 0);
+		rate = 3;
+		lifespan = 3000;
+		velocity = ofVec3f(0, 50, 0);
 		//delete parentImagelater
 		//parentImage.load("cookie.png");
 		childImage.load("skull.png");
@@ -84,7 +86,7 @@ void Emitter::init() {
 
 void Emitter::draw() {
 	if (emitterType == GUN) {
-		ofDrawRectangle(rectangle.getPosition(), rectangle.getHeight(), rectangle.getWidth());
+		//ofDrawRectangle(rectangle.getPosition(), rectangle.getHeight(), rectangle.getWidth());
 		parentImage.draw(trans, width, height);
 
 		ofSetColor(0,255,0);
@@ -147,6 +149,8 @@ void Emitter::shoot() {
 };
 
 void Emitter::update() {
+	float sinMovement;
+
 	switch (emitterType) {
 	case GUN:
 		//shoot at a steady rate
@@ -177,7 +181,8 @@ void Emitter::update() {
 			if ((ofGetElapsedTimeMillis() - lastSpawned) > (1000 / rate)) {
 				shoot();
 			}
-			trans = ofVec3f(ofRandom(0, ofGetWindowWidth() - 50), 0, 0);
+			sinMovement = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, ofGetWidth() - 50);
+			trans = ofVec3f(sinMovement,0,0);
 			cout << "updating emitter B" << endl;
 		}
 		break;
