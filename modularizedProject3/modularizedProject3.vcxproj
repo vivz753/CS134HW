@@ -185,8 +185,12 @@
 		<ClCompile Include="src\Emitter.cpp" />
 		<ClCompile Include="src\HomeScreen.cpp" />
 		<ClCompile Include="src\InGameScreen.cpp" />
+		<ClCompile Include="src\Particle.cpp" />
+		<ClCompile Include="src\ParticleEmitter.cpp" />
+		<ClCompile Include="src\ParticleSystem.cpp" />
 		<ClCompile Include="src\Screen.cpp" />
 		<ClCompile Include="src\Sprite.cpp" />
+		<ClCompile Include="src\TransformObject.cpp" />
 		<ClCompile Include="..\..\..\Visual Studio 2017\of_v0.10.0_vs2017_release\addons\ofxGui\src\ofxBaseGui.cpp" />
 		<ClCompile Include="..\..\..\Visual Studio 2017\of_v0.10.0_vs2017_release\addons\ofxGui\src\ofxButton.cpp" />
 		<ClCompile Include="..\..\..\Visual Studio 2017\of_v0.10.0_vs2017_release\addons\ofxGui\src\ofxColorPicker.cpp" />
@@ -203,8 +207,12 @@
 		<ClInclude Include="src\Emitter.h" />
 		<ClInclude Include="src\HomeScreen.h" />
 		<ClInclude Include="src\InGameScreen.h" />
+		<ClInclude Include="src\Particle.h" />
+		<ClInclude Include="src\ParticleEmitter.h" />
+		<ClInclude Include="src\ParticleSystem.h" />
 		<ClInclude Include="src\Screen.h" />
 		<ClInclude Include="src\Sprite.h" />
+		<ClInclude Include="src\TransformObject.h" />
 		<ClInclude Include="..\..\..\Visual Studio 2017\of_v0.10.0_vs2017_release\addons\ofxGui\src\ofxBaseGui.h" />
 		<ClInclude Include="..\..\..\Visual Studio 2017\of_v0.10.0_vs2017_release\addons\ofxGui\src\ofxButton.h" />
 		<ClInclude Include="..\..\..\Visual Studio 2017\of_v0.10.0_vs2017_release\addons\ofxGui\src\ofxColorPicker.h" />

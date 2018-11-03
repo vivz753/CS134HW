@@ -22,10 +22,22 @@
 		<ClCompile Include="src\ofApp.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
+		<ClCompile Include="src\Particle.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="src\ParticleEmitter.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="src\ParticleSystem.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
 		<ClCompile Include="src\Screen.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
 		<ClCompile Include="src\Sprite.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="src\TransformObject.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
 		<ClCompile Include="..\..\..\Visual Studio 2017\of_v0.10.0_vs2017_release\addons\ofxGui\src\ofxBaseGui.cpp">
@@ -89,10 +101,22 @@
 		<ClInclude Include="src\ofApp.h">
 			<Filter>src</Filter>
 		</ClInclude>
+		<ClInclude Include="src\Particle.h">
+			<Filter>src</Filter>
+		</ClInclude>
+		<ClInclude Include="src\ParticleEmitter.h">
+			<Filter>src</Filter>
+		</ClInclude>
+		<ClInclude Include="src\ParticleSystem.h">
+			<Filter>src</Filter>
+		</ClInclude>
 		<ClInclude Include="src\Screen.h">
 			<Filter>src</Filter>
 		</ClInclude>
 		<ClInclude Include="src\Sprite.h">
+			<Filter>src</Filter>
+		</ClInclude>
+		<ClInclude Include="src\TransformObject.h">
 			<Filter>src</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\Visual Studio 2017\of_v0.10.0_vs2017_release\addons\ofxGui\src\ofxBaseGui.h">

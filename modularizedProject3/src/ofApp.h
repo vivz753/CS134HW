@@ -1,3 +1,7 @@
+//delete ofDrawRectangle in Sprite.h, SpriteSystem draw()
+//create a particle system and shoot it upon collision (little rectangles of 5x5 pixels, random colors)
+//bug: level 1 is initialized twice when start game
+
 #pragma once
 
 #include "ofMain.h"

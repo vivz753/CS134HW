@@ -1,5 +1,6 @@
 #pragma once
 #include "ofMain.h"
+#include "ParticleEmitter.h"
 
 typedef enum { A, B, C, WEAPON, BULLET } SpriteType;
 
@@ -57,9 +58,21 @@ public:
 		for (vector<Sprite>::iterator i = sprites.begin(); i != sprites.end(); i++) {
 			for (vector<Sprite>::iterator j = enemySprites->sprites.begin(); j != enemySprites->sprites.end(); j++) {
 				if (i->rectangle.intersects(j->rectangle)) {
+
+					//remove bullet sprites
 					i->lifespan = 1;
+
+					//remove enemy sprites
 					j->lifespan = 1;
+
+					//add 50 pts to playerScore
 					score += 50;
+
+					//create ParticleEmitter, set the Position, add it to a vector of ParticleEmiters (draw & update particleEmitters in those methods)
+					//sets the ParticleEmitter position to collision position (rectangle.trans) & start & stop for 1 sec
+					ParticleEmitter pe = ParticleEmitter();
+					pe.setPosition(i->rectangle.getPosition());
+					pe.start();
 				}
 			}
 		}
