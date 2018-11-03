@@ -13,8 +13,8 @@ void ofApp::update(){
 	if (screen -> transition) {
 		switch (screen->transitionScreen) {
 		case INGAME:
-			setScreen(inGame);
 			setLevel(home->transitionLevel);
+			setScreen(inGame);
 			break;
 		case HOME:
 			setScreen(home);

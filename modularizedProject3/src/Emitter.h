@@ -45,6 +45,6 @@ public:
 	ofVec3f velocity;
 
 	ofRectangle rectangle;
-
+	ofRectangle hpBar;
 	
 };

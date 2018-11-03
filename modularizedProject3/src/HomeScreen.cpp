@@ -14,7 +14,7 @@ void HomeScreen::init()
 	transitionLevel = 1;
 	//initialize start menu elements
 	text.load("arial.ttf", 32);
-	background.load("gotmenu.jpg");
+	background.load("halloweenmenu.jpg");
 
 	//load starting bg music
 	bgMusic.load("gottheme.mp3");
@@ -111,5 +111,5 @@ void HomeScreen::keyReleased(int key) {
 };
 
 void HomeScreen::mouseMoved(int x, int y) {
-	cout << "mouse moved" << endl;
+	
 };

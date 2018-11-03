@@ -12,15 +12,23 @@ InGameScreen::InGameScreen() {
 	playerScore = 0;
 };
 
-
 void InGameScreen::setLevel(LevelType level) {
-	//every time we change levels, terminate the current settings, and then init()
-	//terminate();
+	//every time we change levels, stop the emitters, and then init()
+
+	gunEmitter.stop();
+	for (size_t i = 0; i < emitters.size(); i++) {
+		emitters[i].emitting = false;
+	}
+
+	emitters.clear();
+
 	levelType = level;
-	//init();
+	init();
 };
 
+//only use this to transition from level 1 to level 2 to level 3
 void InGameScreen::setLevel(int level) {
+	
 	switch (level) {
 	case 1:
 		setLevel(Level1);
@@ -37,6 +45,7 @@ void InGameScreen::setLevel(int level) {
 	}
 }
 
+//this is run everytime a level is switched, or when user starts game, or when user selects a specific level
 void InGameScreen::init()
 {
 	//player HP gets reset at each level
@@ -58,6 +67,9 @@ void InGameScreen::init()
 		cout << "switched to level 1" << endl;
 		break;
 	case Level2:
+
+		/*emitterA.init();
+		emitters.push_back(emitterA);*/
 		emitterB.init();
 		emitters.push_back(emitterB);
 		//create emitter A & B
@@ -83,9 +95,11 @@ void InGameScreen::init()
 
 void InGameScreen::terminate() {
 
-	//stop music, reset transition variable
+	//stop music, reset transition variable, set the level back to 1, reset score
 	bgMusic.stop();
 	transition = false;
+	levelType = Level1;
+	playerScore = 0;
 
 	//stop emitters from firing
 	gunEmitter.stop();
@@ -93,7 +107,7 @@ void InGameScreen::terminate() {
 		emitters[i].emitting = false;
 	}
 
-	//emitters.clear();
+	emitters.clear();
 
 }
 
@@ -109,15 +123,15 @@ void InGameScreen::draw()
 	case Level1:
 		//a.draw();
 		//draw emitter A only
-		text.drawString("level 1; press q to quit", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
+		text.drawString("level 1; press s to start, q to quit, space to fire", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
 	case Level2:
 		//b.draw();
-		text.drawString("level 2; press q to quit", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
+		text.drawString("level 2; press s to start, q to quit, space to fire", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
 	case Level3:
 		//c.draw();
-		text.drawString("level 3; press q to quit", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
+		text.drawString("level 3; press s to start, q to quit, space to fire", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
 	}
 
@@ -141,6 +155,9 @@ void InGameScreen::update() {
 	switch (levelType) {
 	
 	case Level1:
+		if (playerScore >= 500) {
+			setLevel(2);
+		}
 		break;
 	case Level2:
 		break;
@@ -154,11 +171,6 @@ void InGameScreen::update() {
 		transitionScreen = HOME;
 
 	}
-
-	//if (playerScore = 500) {
-	//	setLevel(Level2);
-	//}
-
 
 };
 
@@ -177,8 +189,11 @@ void InGameScreen::checkCollisions() {
 void InGameScreen::keyPressed(int key) {
 	switch (key) {
 	case ' ':
-		//start all the emitters 
+		//start gun emitter
 		gunEmitter.start();
+		break;
+	case 's':
+		//start emitters
 		for (size_t i = 0; i < emitters.size(); i++) {
 			emitters[i].start();
 		}

@@ -28,13 +28,16 @@ void Emitter::init() {
 		velocity = ofVec3f(0, 300, 0);
 		//delete parentImagelater
 		//parentImage.load("cookie.png");
-		childImage.load("cookie.png");
+		childImage.load("spriteA.png");
 		cout << "emitterA init" << endl;
 		
 		//set sprites 
 		break;
 	case EMITTERB:
 		//childImage.load("skull.png");
+		trans = ofVec3f(20, 0, 0);
+		width = 50;
+		height = 50;
 		rate = 5;
 		lifespan = 1500;
 		velocity = ofVec3f(0, 300, 0);
@@ -46,6 +49,17 @@ void Emitter::init() {
 	case EMITTERC:
 		//childImage.load("pokeball.png");
 		rate = 5;
+
+
+
+
+		//fill me out
+
+
+
+
+
+		//
 		break;
 	case GUN:
 		hp = 500;
@@ -60,6 +74,8 @@ void Emitter::init() {
 		cout << "gun init" << endl;
 
 		rectangle = ofRectangle(trans, width, height);
+
+		hpBar = ofRectangle(ofVec3f(trans.x, trans.y + height + 15), width, 5);
  		break;
 	}
 	
@@ -70,7 +86,10 @@ void Emitter::draw() {
 	if (emitterType == GUN) {
 		ofDrawRectangle(rectangle.getPosition(), rectangle.getHeight(), rectangle.getWidth());
 		parentImage.draw(trans, width, height);
-		
+
+		ofSetColor(0,255,0);
+		ofDrawRectangle(hpBar);
+		ofSetColor(255, 255, 255);
 	}
 	sys->draw();
 };
@@ -137,6 +156,8 @@ void Emitter::update() {
 			}
 		}
 		
+		hpBar.setPosition(ofVec3f(trans.x, trans.y + height + 10));
+		hpBar.setWidth((hp/500) * width);
 		rectangle.setPosition(trans);
 
 		/*if (moving) {
@@ -149,12 +170,15 @@ void Emitter::update() {
 				shoot();
 			}
 			trans = ofVec3f(ofRandom(0, ofGetWindowWidth() - 50), 0, 0);
-			cout << "updating emitter a" << endl;
 		}
 		break;
 	case EMITTERB:
 		if (emitting) {
-
+			if ((ofGetElapsedTimeMillis() - lastSpawned) > (1000 / rate)) {
+				shoot();
+			}
+			trans = ofVec3f(ofRandom(0, ofGetWindowWidth() - 50), 0, 0);
+			cout << "updating emitter B" << endl;
 		}
 		break;
 	case EMITTERC:
