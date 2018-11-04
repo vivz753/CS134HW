@@ -33,6 +33,11 @@ public:
 	ofTrueTypeFont text;
 
 	Emitter gunEmitter;
+	Emitter emitterA;
+	Emitter emitterB;
+	Emitter emitterC;
+
+	ParticleEmitter * pe;
 
 	vector<Emitter> emitters;
 	Sprite a = Sprite(A);

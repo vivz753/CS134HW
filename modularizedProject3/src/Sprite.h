@@ -36,8 +36,6 @@ class SpriteSystem {
 public:
 	ofVec3f collidedVector;
 	vector<Sprite> sprites;
-	vector<ParticleEmitter> particleEmitters;
-	ParticleEmitter pe = ParticleEmitter();
 	bool collided;
 
 	void SpriteSystem::add(Sprite s) {
@@ -53,17 +51,20 @@ public:
 		i->lifespan = 1;
 	};
 
-
+	ofVec3f SpriteSystem::returnCollidedVector() {
+		return collidedVector;
+	}
 
 
 	//check if this SpriteSystem's sprites (bullets) collide with another SpriteSystem's sprites (enemies)
-	float SpriteSystem::checkCollisions(SpriteSystem * enemySprites) {
+	float SpriteSystem::checkCollisions(SpriteSystem * enemySprites, ParticleEmitter * pe) {
 		float score = 0;
 		for (vector<Sprite>::iterator i = sprites.begin(); i != sprites.end(); i++) {
 			for (vector<Sprite>::iterator j = enemySprites->sprites.begin(); j != enemySprites->sprites.end(); j++) {
 				if (i->rectangle.intersects(j->rectangle)) {
-					
-					collided = true; 
+					//collided = true;
+					collidedVector = ofVec3f(i->rectangle.getPosition().x + i->rectangle.getWidth()/2, i->rectangle.getPosition().y+ i->rectangle.getHeight()/2, 0);
+
 
 					//remove bullet sprites
 					i->lifespan = 1;
@@ -72,34 +73,15 @@ public:
 					j->lifespan = 1;
 
 					//add 50 pts to playerScore
-					score += 50;
-
-					//create ParticleEmitter, set the Position, add it to a vector of ParticleEmiters (draw & update particleEmitters in those methods)
-					//sets the ParticleEmitter position to collision position (rectangle.trans) & start & stop for 1 sec
-
-					//broken
-					/*ParticleEmitter pe = ParticleEmitter();
-					pe.setPosition(i->rectangle.getPosition());
-					pe.sys->addForce(new RadialForce());
-					pe.setParticleEmitterType(DiscEmitter);
-					pe.setGroupSize(10);
-					pe.oneShot = true;
-					pe.setRandomLife(true);
-					particleEmitters.push_back(pe);*/
-
-					//pe.setPosition(i->rectangle.getPosition());
-					collidedVector = i->rectangle.getPosition();
-					//pe.start();
-
-					pe.setPosition(collidedVector);
-					pe.start();
+					score = 50;
 					
-					cout << "collision" << endl;
-
-					collided = false;
+					pe->setPosition(collidedVector);
+					pe->start();
 				}
+				//else collided = false;
 			}
 		}
+		//return collided;
 		return score;
 	}
 
@@ -116,7 +98,7 @@ public:
 		while (s != sprites.end()) {
 			if (s->lifespan > 0 && s->age() > s->lifespan) {
 				//          cout << "deleting sprite: " << s->name << endl;
-				tmp = sprites.erase(s);	//not sure what this does
+				tmp = sprites.erase(s);	
 				s = tmp;
 			}
 			else s++;
@@ -132,33 +114,18 @@ public:
 
 		//keeps track of age of sprites & removes those who are too old
 		//animate sprites by updating the positions; update their pos vectors
-
-		//if (collided) {
-		//	cout << "changed vector" << endl;
-		//	pe.setPosition(collidedVector);
-		//	pe.start();
-		//}
-		pe.update();
 	};
 
 	void SpriteSystem::draw() {
 		for (size_t i = 0; i < sprites.size(); i++) {
 			
 			//eventually delete to make square invisible
-			ofDrawRectangle(sprites[i].rectangle.getPosition(), sprites[i].rectangle.getHeight(), sprites[i].rectangle.getWidth());
+			//ofDrawRectangle(sprites[i].rectangle.getPosition(), sprites[i].rectangle.getHeight(), sprites[i].rectangle.getWidth());
 
 			sprites[i].draw();
 
 		}
 		
-		////draw method for particleEmitters
-		//for (size_t i = 0; i < particleEmitters.size(); i++) {
-		//	particleEmitters[i].draw();
-
-		//	cout << "drawing emitter: " << i << endl;;
-		//}
-
-		pe.draw();
 	};
 
 

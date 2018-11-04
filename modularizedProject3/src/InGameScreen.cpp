@@ -55,11 +55,14 @@ void InGameScreen::init()
 	//only create the gunEmitter once
 	gunEmitter = Emitter(GUN);
 	gunEmitter.init();
+
 	//emitters.push_back(gunEmitter);
 	
 	Emitter emitterA = Emitter(EMITTERA);
 	Emitter emitterB = Emitter(EMITTERB);
 	Emitter emitterC = Emitter(EMITTERC);
+
+	pe = new ParticleEmitter();
 
 	switch (levelType) {
 	case Level1:
@@ -84,14 +87,14 @@ void InGameScreen::init()
 		break;
 	}
 	
-	//initialize start menu elements
-	text.load("arial.ttf", 32);
-	background.load("northofthewall.jpg");
+	////initialize start menu elements
+	//text.load("arial.ttf", 32);
+	//background.load("northofthewall.jpg");
 
-	//load starting bg music
-	bgMusic.load("battle.mp3");
-	bgMusic.play();
-	bgMusic.setLoop(true);
+	////load starting bg music
+	//bgMusic.load("battle.mp3");
+	//bgMusic.play();
+	//bgMusic.setLoop(true);
 };
 
 void InGameScreen::terminate() {
@@ -127,20 +130,16 @@ void InGameScreen::draw()
 	switch (levelType) {
 	case Level1:
 		//a.draw();
-		//draw emitter A only
-		
 		ofDrawBitmapString("LEVEL 1: S to start, Q to quit, SPACE to fire", 20, ofGetWindowHeight() - 20);
 		//text.drawString("level 1; press s to start, q to quit, space to fire", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
 	case Level2:
 		//b.draw();
-		ofClear(0);
 		ofDrawBitmapString("LEVEL 2", 20, ofGetWindowHeight() - 20);
 		//text.drawString("level 2; press s to start, q to quit, space to fire", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
 	case Level3:
 		//c.draw();
-		ofClear(0);
 		ofDrawBitmapString("LEVEL 3", 20, ofGetWindowHeight() - 20);
 		//text.drawString("level 3; press s to start, q to quit, space to fire", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
@@ -151,8 +150,7 @@ void InGameScreen::draw()
 		emitters[i].draw();
 	}
 
-	//test
-	ofDrawRectangle(ofVec3f(20, 20, 0), 2, 2);
+	pe->draw();
 
 };
 
@@ -190,9 +188,17 @@ void InGameScreen::update() {
 };
 
 void InGameScreen::checkCollisions() {
-	for (int i = 0; i < emitters.size(); i++) {
+	for (size_t i = 0; i < emitters.size(); i++) {
 		//checks if bullets hit emitter enemy sprites
-		playerScore += gunEmitter.sys->checkCollisions(emitters[i].sys);
+		/*if (gunEmitter.sys->checkCollisions(emitters[i].sys)) {
+			playerScore += 50;
+			pe.setPosition(gunEmitter.sys->returnCollidedVector);
+			pe.start();
+
+		}*/
+		pe->update();
+
+		playerScore += gunEmitter.sys->checkCollisions(emitters[i].sys, pe);
 		
 
 		//checks if emitter enemy sprites hit the gun emitter

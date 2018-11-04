@@ -64,6 +64,7 @@ void Emitter::init() {
 		//
 		break;
 	case GUN:
+		//holds the particleEmitter for explosion effect upon collision
 		hp = 500;
 		trans = ofVec3f(400, 400, 0);
 		width = 50;
@@ -92,6 +93,7 @@ void Emitter::draw() {
 		ofSetColor(0,255,0);
 		ofDrawRectangle(hpBar);
 		ofSetColor(255, 255, 255);
+
 	}
 	sys->draw();
 };
@@ -163,10 +165,6 @@ void Emitter::update() {
 		hpBar.setPosition(ofVec3f(trans.x, trans.y + height + 10));
 		hpBar.setWidth((hp/500) * width);
 		rectangle.setPosition(trans);
-
-		/*if (moving) {
-			translate(movingVector);
-		}*/
 		break;
 	case EMITTERA:
 		if (emitting) {

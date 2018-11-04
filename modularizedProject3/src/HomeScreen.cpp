@@ -11,22 +11,8 @@ HomeScreen::HomeScreen() {
 
 void HomeScreen::init()
 {
-	//test
-	/*pe.setPosition(i->rectangle.getPosition());
-	pe.sys->addForce(new RadialForce());
-	pe.setParticleEmitterType(DiscEmitter);
-	pe.setGroupSize(10);
-	pe.oneShot = true;
-	pe.setRandomLife(true);*/
-	
-	//pe.init();
-	//pe.oneShot = true;
-	//pe.sys->addForce(radialForce);
-	//pe.setParticleEmitterType(DiscEmitter);
-	//pe.setRandomLife(true);
-	//pe.setPosition(ofVec3f(100, 100, 0));
 
-	pe.setPosition(ofVec3f(50,500,0));
+	//pe.setPosition(ofVec3f(50,500,0));
 	
 
 	//delete laters
@@ -75,7 +61,7 @@ void HomeScreen::draw()
 	//ofClear(0);
 	//
 	//	//test
-	pe.draw();
+	//pe.draw();
 	////delete later
 
 };
@@ -83,7 +69,7 @@ void HomeScreen::draw()
 void HomeScreen::update() {
 	//cout << "updating" << endl;
 
-	pe.update();
+	//pe.update();
 	//delete later
 };
 
