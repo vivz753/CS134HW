@@ -21,11 +21,11 @@ void Emitter::init() {
 	case EMITTERA:
 		
 		trans = ofVec3f(20, 0, 0);
-		width = 50;
-		height = 50;
-		rate = 5;
+		width = 25;
+		height = 25;
+		rate = 2;
 		lifespan = 1500;
-		velocity = ofVec3f(0, 300, 0);
+		velocity = ofVec3f(0, 150, 0);
 		//delete parentImagelater
 		//parentImage.load("cookie.png");
 		childImage.load("spriteA.png");
@@ -183,7 +183,6 @@ void Emitter::update() {
 			}
 			sinMovement = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, ofGetWidth() - 50);
 			trans = ofVec3f(sinMovement,0,0);
-			cout << "updating emitter B" << endl;
 		}
 		break;
 	case EMITTERC:
@@ -217,7 +216,7 @@ void Emitter::checkCollision(SpriteSystem * enemySprites) {
 	for (vector<Sprite>::iterator i = enemySprites->sprites.begin(); i != enemySprites->sprites.end(); i++) {
 		if (i->rectangle.intersects(rectangle)) {
 			i->lifespan = 1;
-			hp -= 15;
+			hp -= 50;
 		}
 		
 	}

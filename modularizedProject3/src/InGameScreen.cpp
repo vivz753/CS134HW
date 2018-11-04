@@ -115,26 +115,34 @@ void InGameScreen::terminate() {
 void InGameScreen::draw()
 {
 	//draw background image
-	background.resize(ofGetWindowWidth(), ofGetWindowHeight());
-	background.draw(0, 0);
-	text.drawString(to_string(gunEmitter.hp), 50, 50);
-	text.drawString(to_string(playerScore), 50, 150);
-
+	/*background.resize(ofGetWindowWidth(), ofGetWindowHeight());
+	background.draw(0, 0);*/
+	/*text.drawString(to_string(gunEmitter.hp), 50, 50);
+	text.drawString(to_string(playerScore), 50, 150);*/
+	ofClear(0);
+	ofDrawBitmapString("HP: " + to_string(gunEmitter.hp), 20, 20);
+	ofDrawBitmapString(to_string(playerScore), 20, 40);
 	
 
 	switch (levelType) {
 	case Level1:
 		//a.draw();
 		//draw emitter A only
-		text.drawString("level 1; press s to start, q to quit, space to fire", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
+		
+		ofDrawBitmapString("LEVEL 1: S to start, Q to quit, SPACE to fire", 20, ofGetWindowHeight() - 20);
+		//text.drawString("level 1; press s to start, q to quit, space to fire", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
 	case Level2:
 		//b.draw();
-		text.drawString("level 2; press s to start, q to quit, space to fire", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
+		ofClear(0);
+		ofDrawBitmapString("LEVEL 2", 20, ofGetWindowHeight() - 20);
+		//text.drawString("level 2; press s to start, q to quit, space to fire", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
 	case Level3:
 		//c.draw();
-		text.drawString("level 3; press s to start, q to quit, space to fire", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
+		ofClear(0);
+		ofDrawBitmapString("LEVEL 3", 20, ofGetWindowHeight() - 20);
+		//text.drawString("level 3; press s to start, q to quit, space to fire", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
 	}
 
@@ -142,6 +150,9 @@ void InGameScreen::draw()
 	for (size_t i = 0; i < emitters.size(); i++) {
 		emitters[i].draw();
 	}
+
+	//test
+	ofDrawRectangle(ofVec3f(20, 20, 0), 2, 2);
 
 };
 

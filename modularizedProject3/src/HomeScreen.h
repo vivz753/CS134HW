@@ -3,6 +3,7 @@
 #include "Screen.h"
 #include "ofMain.h"
 #include "ofxGui.h"
+#include "ParticleEmitter.h"
 
 typedef enum { DEFAULT, SELECTLEVEL } MenuType;
 
@@ -24,4 +25,11 @@ public:
 	ofImage background;
 	ofSoundPlayer bgMusic;
 	ofTrueTypeFont text;
+
+
+	//test code
+	RadialForce * radialForce = new RadialForce();
+
+	//simulate exhaust of engine
+	ParticleEmitter pe = ParticleEmitter();
 };

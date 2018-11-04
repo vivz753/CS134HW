@@ -34,7 +34,11 @@ public:
 
 class SpriteSystem {
 public:
+	ofVec3f collidedVector;
 	vector<Sprite> sprites;
+	vector<ParticleEmitter> particleEmitters;
+	ParticleEmitter pe = ParticleEmitter();
+	bool collided;
 
 	void SpriteSystem::add(Sprite s) {
 		sprites.push_back(s);
@@ -58,6 +62,8 @@ public:
 		for (vector<Sprite>::iterator i = sprites.begin(); i != sprites.end(); i++) {
 			for (vector<Sprite>::iterator j = enemySprites->sprites.begin(); j != enemySprites->sprites.end(); j++) {
 				if (i->rectangle.intersects(j->rectangle)) {
+					
+					collided = true; 
 
 					//remove bullet sprites
 					i->lifespan = 1;
@@ -70,9 +76,27 @@ public:
 
 					//create ParticleEmitter, set the Position, add it to a vector of ParticleEmiters (draw & update particleEmitters in those methods)
 					//sets the ParticleEmitter position to collision position (rectangle.trans) & start & stop for 1 sec
-					ParticleEmitter pe = ParticleEmitter();
+
+					//broken
+					/*ParticleEmitter pe = ParticleEmitter();
 					pe.setPosition(i->rectangle.getPosition());
+					pe.sys->addForce(new RadialForce());
+					pe.setParticleEmitterType(DiscEmitter);
+					pe.setGroupSize(10);
+					pe.oneShot = true;
+					pe.setRandomLife(true);
+					particleEmitters.push_back(pe);*/
+
+					//pe.setPosition(i->rectangle.getPosition());
+					collidedVector = i->rectangle.getPosition();
+					//pe.start();
+
+					pe.setPosition(collidedVector);
 					pe.start();
+					
+					cout << "collision" << endl;
+
+					collided = false;
 				}
 			}
 		}
@@ -109,7 +133,12 @@ public:
 		//keeps track of age of sprites & removes those who are too old
 		//animate sprites by updating the positions; update their pos vectors
 
-
+		//if (collided) {
+		//	cout << "changed vector" << endl;
+		//	pe.setPosition(collidedVector);
+		//	pe.start();
+		//}
+		pe.update();
 	};
 
 	void SpriteSystem::draw() {
@@ -121,7 +150,15 @@ public:
 			sprites[i].draw();
 
 		}
-		//cout << "drawing" << endl;
+		
+		////draw method for particleEmitters
+		//for (size_t i = 0; i < particleEmitters.size(); i++) {
+		//	particleEmitters[i].draw();
+
+		//	cout << "drawing emitter: " << i << endl;;
+		//}
+
+		pe.draw();
 	};
 
 
