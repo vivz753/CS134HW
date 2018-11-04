@@ -21,6 +21,9 @@ public:
 	void keyPressed(int);
 	void keyReleased(int);
 	void mouseMoved(int, int);
+	void mousePressed(int, int, int);
+	void mouseDragged(int, int, int);
+	void mouseReleased(int, int, int);
 
 	ofImage background;
 	ofSoundPlayer bgMusic;

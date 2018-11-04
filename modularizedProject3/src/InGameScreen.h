@@ -25,6 +25,9 @@ public:
 	void keyPressed(int);
 	void keyReleased(int);
 	void mouseMoved(int, int);
+	void mousePressed(int, int, int);
+	void mouseDragged(int, int, int);
+	void mouseReleased(int, int, int);
 
 	float playerScore;
 	
@@ -36,6 +39,7 @@ public:
 	Emitter emitterA;
 	Emitter emitterB;
 	Emitter emitterC;
+	Emitter emitterB2;
 
 	ParticleEmitter * pe;
 
@@ -43,11 +47,4 @@ public:
 	Sprite a = Sprite(A);
 	Sprite b = Sprite(B);
 	Sprite c = Sprite(C);
-
-	//create vector of emitters
-	//hp
-	//points
-	//gun emitter (emitters can be 1, 2, 3 type; emitter 1 spits sprite a, emitter 2 spits sprite a & b, emitter 3 spits sprite a & b & c)
-	//gun image
-	//bullet image
 };

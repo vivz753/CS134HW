@@ -53,6 +53,7 @@ void HomeScreen::draw()
 		ofDrawBitmapString("1 for level 1", ofGetWindowWidth() / 2 - 50, ofGetWindowHeight() / 2);
 		ofDrawBitmapString("2 for level 2", ofGetWindowWidth() / 2 - 50, ofGetWindowHeight() / 2 + 20);
 		ofDrawBitmapString("3 for level 3", ofGetWindowWidth() / 2 - 50, ofGetWindowHeight() / 2 + 40);
+		ofDrawBitmapString("B to go back", ofGetWindowWidth() / 2 - 50, ofGetWindowHeight() / 2 + 100);
 		//text.drawString("press 1 for level1, 2 for level2, 3 for level3", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
 	}
@@ -136,4 +137,15 @@ void HomeScreen::keyReleased(int key) {
 
 void HomeScreen::mouseMoved(int x, int y) {
 	
+};
+
+void HomeScreen::mousePressed(int x, int y, int button) {
+	
+};
+
+void HomeScreen::mouseDragged(int x, int y, int button) {
+	
+};
+
+void HomeScreen::mouseReleased(int x, int y, int button) {
 };

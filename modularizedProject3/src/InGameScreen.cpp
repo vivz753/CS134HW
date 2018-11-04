@@ -15,7 +15,6 @@ InGameScreen::InGameScreen() {
 
 void InGameScreen::setLevel(LevelType level) {
 	//every time we change levels, stop the emitters, and then init()
-
 	gunEmitter.stop();
 	for (size_t i = 0; i < emitters.size(); i++) {
 		emitters[i].emitting = false;
@@ -33,15 +32,12 @@ void InGameScreen::setLevel(int level) {
 	switch (level) {
 	case 1:
 		setLevel(Level1);
-		//levelType = Level1;
 		break;
 	case 2:
 		setLevel(Level2);
-		//levelType = Level2;
 		break;
 	case 3:
 		setLevel(Level1);
-		//levelType = Level3;
 		break;
 	}
 }
@@ -49,38 +45,78 @@ void InGameScreen::setLevel(int level) {
 //this is run everytime a level is switched, or when user starts game, or when user selects a specific level
 void InGameScreen::init()
 {
+
 	//player HP gets reset at each level
 	gunEmitter.hp = 500;
 
 	//only create the gunEmitter once
 	gunEmitter = Emitter(GUN);
-	gunEmitter.init();
+	//gunEmitter.init();
 
 	//emitters.push_back(gunEmitter);
 	
-	Emitter emitterA = Emitter(EMITTERA);
-	Emitter emitterB = Emitter(EMITTERB);
-	Emitter emitterC = Emitter(EMITTERC);
+	
+	
+	
+	
 
 	pe = new ParticleEmitter();
 
 	switch (levelType) {
 	case Level1:
-		emitterA.init();
+		emitterA = Emitter(EMITTERA);
+		emitterB = Emitter(EMITTERB);
+		emitterB2 = Emitter(EMITTERB);
+
+		//emitterA.init();
 		emitters.push_back(emitterA);
+
+		//emitterB.init();
+		emitterB.sys->applySinMovement(-1);
+		emitters.push_back(emitterB);
+
+
+		//emitterB2.init();
+		emitterB2.sys->applySinMovement(1);
+		emitters.push_back(emitterB2);
+
+		cout << "emitter size: " << emitters.size() << endl;
 		cout << "switched to level 1" << endl;
 		break;
 	case Level2:
 
-		/*emitterA.init();
-		emitters.push_back(emitterA);*/
-		emitterB.init();
+		//emitterA.init();
+		//emitterA.sys->applySinMovement(1);
+		//emitters.push_back(emitterA);
+
+		//add 1 emitterB w/ sinmovement
+		//emitterB.init();
+
+		emitterB = Emitter(EMITTERB);
+		emitterB2 = Emitter(EMITTERB);
+
+		emitterB.sys->applySinMovement(1);
 		emitters.push_back(emitterB);
+		
+
+		//emitterB2.init();
+		emitterB2.setPosition(ofVec3f(0, -100, 0));
+		emitterB2.sys->applySinMovement(-1);
+		emitters.push_back(emitterB2);
+
+		cout << "emitter size: " << emitters.size() << endl;
+		
+		//add 2nd emitterB w/ -sinmovement
+	/*	emitterB.sys->applySinMovement(-1);
+		emitters.push_back(emitterB);
+		cout << "emitter size: " << emitters.size() << endl;*/
 		//create emitter A & B
 		cout << "switched to level 2" << endl;
 		break;
 	case Level3:
-		emitterC.init();
+		emitterC = Emitter(EMITTERC);
+
+		//emitterC.init();
 		emitters.push_back(emitterC);
 		//create emitter A & B & C
 		cout << "switched to level 3" << endl;
@@ -106,7 +142,7 @@ void InGameScreen::terminate() {
 	playerScore = 0;
 
 	//stop emitters from firing
-	gunEmitter.stop();
+	
 	for (size_t i = 0; i < emitters.size(); i++) {
 		emitters[i].emitting = false;
 	}
@@ -145,19 +181,25 @@ void InGameScreen::draw()
 		break;
 	}
 
+	//draw gun
 	gunEmitter.draw();
+	
+	//draw all enemy emitters
 	for (size_t i = 0; i < emitters.size(); i++) {
 		emitters[i].draw();
 	}
 
+	//draw particlesystem for collisions
 	pe->draw();
 
 };
 
 void InGameScreen::update() {
 	
-
+	//update gun
 	gunEmitter.update();
+
+	//update enemy emitters
 	for (size_t i = 0; i < emitters.size(); i++) {
 		emitters[i].update();
 	}
@@ -173,6 +215,7 @@ void InGameScreen::update() {
 		}
 		break;
 	case Level2:
+
 		break;
 	case Level3:
 		break;
@@ -190,18 +233,13 @@ void InGameScreen::update() {
 void InGameScreen::checkCollisions() {
 	for (size_t i = 0; i < emitters.size(); i++) {
 		//checks if bullets hit emitter enemy sprites
-		/*if (gunEmitter.sys->checkCollisions(emitters[i].sys)) {
-			playerScore += 50;
-			pe.setPosition(gunEmitter.sys->returnCollidedVector);
-			pe.start();
-
-		}*/
 		pe->update();
 
+		//update playerScore everytime there is a collision (edit point amount in SpriteSystem checkCollisions method)
 		playerScore += gunEmitter.sys->checkCollisions(emitters[i].sys, pe);
 		
 
-		//checks if emitter enemy sprites hit the gun emitter
+		//checks if emitter enemy sprites hit the gun emitter; removes health if there is a collision
 		gunEmitter.checkCollision(emitters[i].sys);
 	}
 
@@ -220,27 +258,10 @@ void InGameScreen::keyPressed(int key) {
 		}
 		break;
 	case 'q':
-		//cout << "pressing q in game" << endl;
 		transition = true;
 		transitionScreen = HOME;
 		break;
-	/*case 'w':
-		gunEmitter.moving = true;
-		gunEmitter.movingVector += ofVec3f(0, -300, 0);
-		cout << "w pressed " << endl;
-		break;
-	case 'a':
-		gunEmitter.moving = true;
-		gunEmitter.movingVector += ofVec3f(0, 300, 0);
-		break;
-	case 's':
-		gunEmitter.moving = true;
-		gunEmitter.movingVector += ofVec3f(-300, 0, 0);
-		break;
-	case 'd':
-		gunEmitter.moving = true;
-		gunEmitter.movingVector += ofVec3f(300, 0, 0);
-		break;*/
+
 	}
 };
 
@@ -275,4 +296,17 @@ void InGameScreen::mouseMoved(int x, int y) {
 	//cout << "mouse moving: " << x << ", " << y << endl;
 	
 	gunEmitter.translate(x, y);
-}
+};
+
+void InGameScreen::mousePressed(int x, int y, int button) {
+	gunEmitter.start();
+};
+
+void InGameScreen::mouseDragged(int x, int y, int button) {
+	gunEmitter.start();
+	gunEmitter.translate(x, y);
+};
+
+void InGameScreen::mouseReleased(int x, int y, int button) {
+	gunEmitter.stop();
+};

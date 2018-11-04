@@ -12,6 +12,7 @@ public:
 	float width, height;
 	ofImage parentImage;
 	ofImage childImage;
+	float childWidth, childHeight;
 	float lastSpawned;
 	bool emitting;
 	float hp;

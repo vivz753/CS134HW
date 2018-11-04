@@ -36,7 +36,7 @@ class ofApp : public ofBaseApp{
 				screen->terminate();
 			}
 			screen = s;
-			screen->init();
+			//screen->init();
 		};
 
 		void setLevel(int i) {

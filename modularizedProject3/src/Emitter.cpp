@@ -10,6 +10,7 @@ Emitter::Emitter(EmitterType eType) {
 	emitterType = eType;
 	sys = new SpriteSystem();
 	emitting = false;
+	init();
 };
 
 void Emitter::setPosition(ofVec3f p) {
@@ -20,40 +21,49 @@ void Emitter::init() {
 	switch (emitterType) {
 	case EMITTERA:
 		
-		trans = ofVec3f(20, 0, 0);
+		trans = ofVec3f(0, 0, 0);
 		width = 25;
 		height = 25;
+		childWidth = 50;
+		childHeight = 50;
 		rate = 2;
 		lifespan = 1500;
-		velocity = ofVec3f(0, 150, 0);
-		//delete parentImagelater
-		//parentImage.load("cookie.png");
-		childImage.load("spriteA.png");
+		velocity = ofVec3f(0, 250, 0);
+		childImage.load("skull.png");
 		cout << "emitterA init" << endl;
 		
-		//set sprites 
+		 
 		break;
 	case EMITTERB:
-		//childImage.load("skull.png");
+		
 
-
-		trans = ofVec3f(20, 0, 0);
+		//positioned at center of screen
+		trans = ofVec3f(ofGetWindowWidth() / 2, 0, 0);
 		width = 50;
 		height = 50;
-		rate = 3;
-		lifespan = 3000;
-		velocity = ofVec3f(0, 50, 0);
-		//delete parentImagelater
-		//parentImage.load("cookie.png");
+		childWidth = 50;
+		childHeight = 50;
+		rate = .5;
+		lifespan = 9000;
+		velocity = ofVec3f(0, 100, 0);
+	
 		childImage.load("skull.png");
+
 		cout << "emitterB init" << endl;
 		break;
 	case EMITTERC:
-		//childImage.load("pokeball.png");
-		rate = 5;
+		
+		trans = ofVec3f(ofGetWindowWidth() / 2, 350, 0);
+		width = 300;
+		height = 300;
+		childWidth = 50;
+		childHeight = 50;
+		rate = .5;
+		lifespan = 9000;
+		velocity = ofVec3f(0, 100, 0);
 
-
-
+		childImage.load("skull.png");
+		parentImage.load("pumpkincat.png");
 
 		//fill me out
 
@@ -69,11 +79,13 @@ void Emitter::init() {
 		trans = ofVec3f(400, 400, 0);
 		width = 50;
 		height = 50;
+		childWidth = 15;
+		childHeight = 50;
 		rate = 5;
 		lifespan = 1500;
 		velocity = ofVec3f(0, -300, 0);
 		parentImage.load("bow.png");
-		childImage.load("arrow.png");
+		childImage.load("thinarrow.png");
 		cout << "gun init" << endl;
 
 		rectangle = ofRectangle(trans, width, height);
@@ -86,7 +98,7 @@ void Emitter::init() {
 }
 
 void Emitter::draw() {
-	if (emitterType == GUN) {
+	if (emitterType == GUN || EMITTERC) {
 		//ofDrawRectangle(rectangle.getPosition(), rectangle.getHeight(), rectangle.getWidth());
 		parentImage.draw(trans, width, height);
 
@@ -114,19 +126,12 @@ void Emitter::shoot() {
 	switch (emitterType) {
 	case EMITTERA:
 		sprite = new Sprite(A);
-		
-		/*lifespan = 5;
-		velocity = ofVec3f(0, -5, 0);*/
 		break;
 	case EMITTERB:
 		sprite = new Sprite(B);
-		/*lifespan = 10;
-		velocity = ofVec3f(0, -5, 0);*/
 		break;
 	case EMITTERC:
 		sprite = new Sprite(C);
-		/*lifespan = -1;
-		velocity = ofVec3f(0, -5, 0);*/
 		break;
 	case GUN:
 		sprite = new Sprite(BULLET);
@@ -135,6 +140,10 @@ void Emitter::shoot() {
 
 	//sets the image
 	sprite->setImage(childImage);
+	sprite->width = childWidth;
+	sprite->height = childHeight;
+	sprite->rectangle.setWidth(childWidth);
+	sprite->rectangle.setHeight(childHeight);
 	//sprite->init();
 
 	//centers the position of the childSprite to come out of the center of the emitter
@@ -166,6 +175,7 @@ void Emitter::update() {
 		hpBar.setWidth((hp/500) * width);
 		rectangle.setPosition(trans);
 		break;
+		//EMITTER A moves randomly along the x-axis at the top & releases sprites at rate 
 	case EMITTERA:
 		if (emitting) {
 			if ((ofGetElapsedTimeMillis() - lastSpawned) > (1000 / rate)) {
@@ -174,13 +184,19 @@ void Emitter::update() {
 			trans = ofVec3f(ofRandom(0, ofGetWindowWidth() - 50), 0, 0);
 		}
 		break;
+
+		//EMITTER B releases sprites that move in a sin wave
 	case EMITTERB:
 		if (emitting) {
 			if ((ofGetElapsedTimeMillis() - lastSpawned) > (1000 / rate)) {
 				shoot();
 			}
-			sinMovement = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, ofGetWidth() - 50);
-			trans = ofVec3f(sinMovement,0,0);
+			
+			//sinMovement = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, ofGetWidth() - 50);
+			//trans = ofVec3f(sinMovement,0,0);
+
+			//trans = ofVec3f(0, ofGetWindowWidth() / 2 - 25, 0);
+
 		}
 		break;
 	case EMITTERC:

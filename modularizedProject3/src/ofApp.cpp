@@ -13,11 +13,15 @@ void ofApp::update(){
 	if (screen -> transition) {
 		switch (screen->transitionScreen) {
 		case INGAME:
-			setLevel(home->transitionLevel);
 			setScreen(inGame);
+			setLevel(home->transitionLevel);
+			//setLevel calls init() already so we don't need to recall init()
+			
+			//screen->init();
 			break;
 		case HOME:
 			setScreen(home);
+			screen->init();
 			break;
 		}
 		
@@ -47,17 +51,17 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-
+	screen->mouseDragged(x, y, button);
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+	screen->mousePressed(x, y, button);
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-
+	screen->mouseReleased(x, y, button);
 }
 
 //--------------------------------------------------------------

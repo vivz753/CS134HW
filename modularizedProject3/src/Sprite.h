@@ -37,6 +37,9 @@ public:
 	ofVec3f collidedVector;
 	vector<Sprite> sprites;
 	bool collided;
+	bool appliedSinMovement;
+	bool normalSinMovement;
+	bool inverseSinMovement;
 
 	void SpriteSystem::add(Sprite s) {
 		sprites.push_back(s);
@@ -85,6 +88,15 @@ public:
 		return score;
 	}
 
+	void SpriteSystem::applySinMovement(int i) {
+		appliedSinMovement = true;
+		if (i > 0) {
+			normalSinMovement = true;
+		}
+		else {
+			inverseSinMovement = true;
+		}
+	}
 
 	void SpriteSystem::update() {
 		if (sprites.size() == 0) return;
@@ -105,9 +117,25 @@ public:
 		}
 
 		for (size_t i = 0; i < sprites.size(); i++) {
-			sprites[i].trans += sprites[i].velocity / ofGetFrameRate();
+			if (appliedSinMovement) {
+			
+				if (normalSinMovement) {
+					float sinValue = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, ofGetWidth() - 50);
+					sprites[i].trans.x = sinValue;
+				}
 
-			//testing rectangle of sprites
+				else if (inverseSinMovement) {
+					float cosValue = ofMap(cos(ofGetElapsedTimef()), -1, 1, 0, ofGetWidth() - 50);
+					sprites[i].trans.x = cosValue;
+				}
+				sprites[i].trans.y += sprites[i].velocity.y / ofGetFrameRate();
+			}
+			else {
+				sprites[i].trans += sprites[i].velocity / ofGetFrameRate();
+			}
+			
+
+			//rectangle of sprites used to detect collision (ofRectangle intersect())
 			sprites[i].rectangle.setPosition(sprites[i].trans);
 			//cout << "trans: " << sprites[i].trans << endl;
 		}
