@@ -9,8 +9,6 @@ class Emitter {
 public:
 	ofSoundPlayer ouchSound;
 	ofSoundPlayer shootSound;
-	ofSoundPlayer winSound;
-	ofSoundPlayer loseSound;
 	ofSoundPlayer meowSound;
 	
 	bool spritesFollowGun;

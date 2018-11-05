@@ -9,6 +9,8 @@ InGameScreen::InGameScreen() {
 	levelType = Level1;
 	beatLevelOne = false;
 	beatLevelTwo = false;
+	winSound.load("levelwin.wav");
+	loseSound.load("levellose.wav");
 
 
 	//playerScore is a global variable throughout the levels
@@ -16,7 +18,7 @@ InGameScreen::InGameScreen() {
 };
 
 void InGameScreen::setLevel(LevelType level) {
-	confirmedSwitch = false;
+	//confirmedSwitch = false;
 	//every time we change levels, stop the emitters, and then init()
 	//gunEmitter.stop();
 	for (size_t i = 0; i < emitters.size(); i++) {
@@ -24,6 +26,8 @@ void InGameScreen::setLevel(LevelType level) {
 	}
 
 	emitters.clear();
+
+	catPumpkinBoss.emitting = false;
 
 	levelType = level;
 	
@@ -49,8 +53,10 @@ void InGameScreen::setLevel(int level) {
 //this is run everytime a level is switched, or when user starts game, or when user selects a specific level
 void InGameScreen::init()
 {		
+		confirmedSwitch = false;
 		addedEnemies = false;
 		allDead = false;
+
 		//player HP gets reset at each level
 		gunEmitter.hp = 500;
 
@@ -80,21 +86,13 @@ void InGameScreen::init()
 
 			emitterB = Emitter(EMITTERB);
 			emitters.push_back(emitterB);
-
-
-
-			//emitterB2 = Emitter(EMITTERB);
-			//emitterB2.setPosition(ofVec3f(0, 200, 0));
-			//emitterB2.sys->applySinMovement(-1);
-			//emitters.push_back(emitterB2);
+			////emitterB2.sys->applySinMovement(-1);
 
 			cout << "emitter size: " << emitters.size() << endl;
-
 			cout << "switched to level 2" << endl;
 			break;
 		case Level3:
 			initTime = ofGetElapsedTimeMillis();
-
 
 			catPumpkinBoss = Emitter(EMITTERC);
 			catPumpkinBoss.start();
@@ -127,6 +125,7 @@ void InGameScreen::terminate() {
 	transition = false;
 	beatLevelOne = false;
 	beatLevelTwo = false;
+	allDead = false;
 	levelType = Level1;
 	playerScore = 0;
 
@@ -137,6 +136,8 @@ void InGameScreen::terminate() {
 	}
 
 	emitters.clear();
+
+	catPumpkinBoss.stop();
 
 }
 
@@ -234,10 +235,11 @@ void InGameScreen::update() {
 		case Level1:
 			if (!beatLevelOne && allDead) {
 				beatLevelOne = true;
+				winSound.play();
 			}
-			else if (confirmedSwitch) {
+			/*else if (confirmedSwitch) {
 				setLevel(2);
-			}
+			}*/
 			break;
 		case Level2:
 			//if (ofGetElapsedTimeMillis() - initTime > 2000 && !addedEnemies) {
@@ -245,22 +247,26 @@ void InGameScreen::update() {
 			//}
 			if (allDead && !beatLevelTwo) {
 				beatLevelTwo = true;
+				winSound.play();
 			}
-			else if (confirmedSwitch) {
+			/*else if (confirmedSwitch) {
 				setLevel(3);
-			}
+			}*/
 			break;
 		case Level3:
-			catPumpkinBoss.update();
+			//catPumpkinBoss.update();
 			if (catPumpkinBoss.hp <= 0) {
 				playerScore += 1000;
+				winSound.play();
 				setLevel(WIN);
 			}
 			break;
 		}
 
+		catPumpkinBoss.update();
 		//if hp hits 0 or below, transition the screen to home
 		if (gunEmitter.hp <= 0) {
+			loseSound.play();
 			setLevel(LOSE);
 		}
 
@@ -353,18 +359,22 @@ void InGameScreen::keyPressed(int key) {
 			emitters[i].start();
 		}
 
-		if (beatLevelOne) {
-			confirmedSwitch = true;
+		if (beatLevelOne && !beatLevelTwo) {
+			cout << "switching to level 2" << endl;
+			setLevel(2);
+			//confirmedSwitch = true;
 		}
 
 		else if (beatLevelTwo) {
-			confirmedSwitch = true;
+			setLevel(3);
+			cout << "switching to level 3" << endl;
+			//confirmedSwitch = true;
 			//catPumpkinBoss.start();
 		}
 
-		/*else if (levelType == Level3) {
+		else if (levelType == Level3) {
 			catPumpkinBoss.start();
-		}*/
+		}
 
 		break;
 	case 'q':

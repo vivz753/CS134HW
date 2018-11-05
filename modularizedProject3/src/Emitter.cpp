@@ -49,7 +49,7 @@ void Emitter::init() {
 		hp = totalHp;
 
 		//positioned at center of screen
-		trans = ofVec3f(ofGetWindowWidth() / 2, 0, 0);
+		trans = ofVec3f(ofGetWindowWidth() / 2, 50, 0);
 		width = 100;
 		height = 100;
 		childWidth = 50;
@@ -152,24 +152,28 @@ void Emitter::shoot() {
 
 	Sprite * sprite;
 
+	
 	//init sprite depending on type of enemy
 
 	switch (emitterType) {
 	case EMITTERA:
 	case EMITTERA2:
+		shootSound.load("shoot3.wav");
 		sprite = new Sprite(A);
 		sprite = setSpriteSettings(sprite);
 		break;
 	case EMITTERB:
+		shootSound.load("shoot2.wav");
 		sprite = new Sprite(B);
 		sprite = setSpriteSettings(sprite);
 		break;
 	case EMITTERC:
 		sprite = new Sprite(C);
 		sprite = setSpriteSettings(sprite);
-
+		shootSound.load("shoot3.wav");
 		break;
 	case GUN:
+		shootSound.load("shoot.wav");
 		sprite = new Sprite(BULLET);
 		sprite = setSpriteSettings(sprite);
 
@@ -179,7 +183,7 @@ void Emitter::shoot() {
 		break;
 	}	
 
-	
+	shootSound.play();
 	sys->add(*sprite);
 };
 
@@ -258,8 +262,9 @@ void Emitter::update() {
 				shoot();
 				//shootEmitter(EMITTERA);
 			}			
-			sinMovement = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, ofGetHeight() + 50);
-			trans = ofVec3f(sinMovement,0,0);
+			sinMovement = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, ofGetWidth() - width);
+			cosMovement = ofMap(cos(ofGetElapsedTimef()), -1, 1, 0, ofGetHeight() - height);
+			trans = ofVec3f(sinMovement, cosMovement,0);
 			//trans = ofVec3f(0, ofGetWindowWidth() / 2 - 25, 0);
 		}
 		break;
@@ -297,6 +302,17 @@ void Emitter::checkCollision(SpriteSystem * enemySprites) {
 		if (i->rectangle.intersects(rectangle)) {
 			i->lifespan = 1;
 			hp -= 50;
+
+			if (emitterType == GUN) {
+				ouchSound.load("ouch.wav");
+			}
+			else if (emitterType == EMITTERC) {
+				ouchSound.load("meow.wav");
+			}
+			else {
+				ouchSound.load("ouch2.wav");
+			}
+			ouchSound.play();
 		}
 		
 	}
@@ -306,7 +322,13 @@ void Emitter::checkCollision(SpriteSystem * enemySprites) {
 void Emitter::checkCollision(Emitter enemyEmitter) {
 		if (enemyEmitter.rectangle.intersects(rectangle)) {
 			hp -= 50;
+			if (emitterType == GUN) {
+				ouchSound.load("ouch.wav");
+				ouchSound.play();
+			}
 		}
+
+
 
 
 };
