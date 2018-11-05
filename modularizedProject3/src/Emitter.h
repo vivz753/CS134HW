@@ -7,6 +7,12 @@ typedef enum { EMITTERA, EMITTERA2, EMITTERB, EMITTERC, GUN } EmitterType;
 
 class Emitter {
 public:
+	ofSoundPlayer ouchSound;
+	ofSoundPlayer shootSound;
+	ofSoundPlayer winSound;
+	ofSoundPlayer loseSound;
+	ofSoundPlayer meowSound;
+	
 	bool spritesFollowGun;
 	vector<Emitter> minionEmitters;
 	void shootEmitter(EmitterType);

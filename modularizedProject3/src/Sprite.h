@@ -34,6 +34,8 @@ public:
 
 class SpriteSystem {
 public:
+	ofSoundPlayer explodeSound;
+
 	ofVec3f collidedVector;
 	vector<Sprite> sprites;
 	bool collided;
@@ -80,6 +82,9 @@ public:
 					
 					pe->setPosition(collidedVector);
 					pe->start();
+					
+					explodeSound.load("explode.wav");
+					explodeSound.play();
 				}
 				//else collided = false;
 			}
