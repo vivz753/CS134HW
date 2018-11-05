@@ -10,7 +10,10 @@ typedef enum { Level1, Level2, Level3, WIN, LOSE } LevelType;
 
 class InGameScreen : public Screen {
 public:
+	void addEnemies();
+	bool addedEnemies;
 	bool confirmedSwitch = false;
+	float initTime;
 
 	InGameScreen();
 	//InGameScreen(LevelName)
