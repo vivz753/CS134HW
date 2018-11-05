@@ -160,6 +160,7 @@ void Emitter::shoot() {
 	case EMITTERA:
 	case EMITTERA2:
 		shootSound.load("shoot3.wav");
+		shootSound.setVolume(.6);
 		sprite = new Sprite(A);
 		sprite = setSpriteSettings(sprite);
 		break;
@@ -172,6 +173,7 @@ void Emitter::shoot() {
 		sprite = new Sprite(C);
 		sprite = setSpriteSettings(sprite);
 		shootSound.load("shoot3.wav");
+		shootSound.setVolume(.6);
 			
 		break;
 	case GUN:
@@ -294,7 +296,7 @@ void Emitter::update() {
 			if ((ofGetElapsedTimeMillis() - lastSpawned) > (1000 / rate)) {
 				shoot();
 			}
-			sinMovement = ofMap(sin(ofGetElapsedTimef()), -1, 1, 200, 500);
+			sinMovement = ofMap(sin(ofGetElapsedTimef()), -1, 1, ofGetWindowWidth()/2-width, ofGetWindowWidth()/2);
 			trans = ofVec3f(sinMovement,50,0);
 		}
 

@@ -11,7 +11,9 @@ InGameScreen::InGameScreen() {
 	beatLevelTwo = false;
 	winSound.load("levelwin.wav");
 	loseSound.load("levellose.wav");
-
+	igMusic.load("halloweengameplay.mp3");
+	igMusic.setLoop(true);
+	igMusic.setVolume(.4);
 
 	//playerScore is a global variable throughout the levels
 	playerScore = 0;
@@ -52,7 +54,14 @@ void InGameScreen::setLevel(int level) {
 
 //this is run everytime a level is switched, or when user starts game, or when user selects a specific level
 void InGameScreen::init()
-{		
+{
+	if (firstInit) {
+		igMusic.play();
+		firstInit = false;
+	}
+
+		//igMusic.play();
+		igMusic.setPaused(false);
 		confirmedSwitch = false;
 		addedEnemies = false;
 		allDead = false;
@@ -130,20 +139,13 @@ void InGameScreen::init()
 			emitters[i].start();
 		}
 
-		////initialize start menu elements
-		//text.load("arial.ttf", 32);
-		//background.load("northofthewall.jpg");
-
-		////load starting bg music
-		//bgMusic.load("battle.mp3");
-		//bgMusic.play();
-		//bgMusic.setLoop(true);
+		
 };
 
 void InGameScreen::terminate() {
 
 	//stop music, reset transition variable, set the level back to 1, reset score
-	bgMusic.stop();
+	igMusic.setPaused(true);
 	transition = false;
 	beatLevelOne = false;
 	beatLevelTwo = false;
@@ -171,19 +173,22 @@ void InGameScreen::draw()
 
 	case WIN:
 		ofDrawBitmapString("YOU WIN",  ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - 150);
-		ofDrawBitmapString("YOUR SCORE: " + to_string(playerScore), ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - 130);
+		ofDrawBitmapString("YOUR SCORE: " + to_string(playerScore), ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - 110);
 
-		for (int i = 0; i < 7; i++) {
-			ofDrawBitmapString(scores[i], ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - i * 20);
+		ofDrawBitmapString("HIGH SCORES: ", ofGetWindowWidth() / 2 - 69, ofGetWindowHeight() / 2 - 40);
+		if (scores.size() > 0) {
+			for (int i = 0; i < scores.size() && i < 7; i++) {
+				ofDrawBitmapString(scores[i], ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - 20 + i * 20);
+			}
 		}
 
-		ofDrawBitmapString("Q to go back to menu", ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 + -80);
+		ofDrawBitmapString("Q to go back to menu", ofGetWindowWidth() - 200, ofGetWindowHeight() - 20);
 		break;
 	case LOSE:
 		ofDrawBitmapString("YOU LOSE", ofGetWindowWidth() / 2 - 50, ofGetWindowHeight() / 2 - 150);
 		ofDrawBitmapString("YOUR SCORE: " + to_string(playerScore), ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - 110);
 
-		ofDrawBitmapString("HIGH SCORES: ", ofGetWindowWidth() / 2 - 75, ofGetWindowHeight() / 2 - 40);
+		ofDrawBitmapString("HIGH SCORES: ", ofGetWindowWidth() / 2 - 69, ofGetWindowHeight() / 2 - 40);
 		if (scores.size() > 0) {
 			for (int i = 0; i < scores.size() && i < 7; i++) {
 				ofDrawBitmapString(scores[i], ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - 20 + i * 20);
@@ -275,6 +280,7 @@ void InGameScreen::update() {
 			if (!beatLevelOne && allDead) {
 				beatLevelOne = true;
 				winSound.play();
+				igMusic.setPaused(true);
 			}
 
 			break;
@@ -283,6 +289,7 @@ void InGameScreen::update() {
 			if (allDead && !beatLevelTwo) {
 				beatLevelTwo = true;
 				winSound.play();
+				igMusic.setPaused(true);
 			}
 
 			break;
@@ -294,6 +301,7 @@ void InGameScreen::update() {
 				sort(scores.begin(), scores.end(), greater<float>());
 				scores.push_back(playerScore);
 				setLevel(WIN);
+				igMusic.setPaused(true);
 				
 			}
 			break;
@@ -305,6 +313,7 @@ void InGameScreen::update() {
 			scores.push_back(playerScore);
 			sort(scores.begin(), scores.end(), greater<float>());
 			setLevel(LOSE);
+			igMusic.setPaused(true);
 		}
 
 		pe->update();

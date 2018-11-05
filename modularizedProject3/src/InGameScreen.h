@@ -10,9 +10,12 @@ typedef enum { Level1, Level2, Level3, WIN, LOSE } LevelType;
 
 class InGameScreen : public Screen {
 public:
+
+	bool firstInit = true;
 	vector<float> scores;
 	ofSoundPlayer winSound;
 	ofSoundPlayer loseSound;
+	ofSoundPlayer bgMusic;
 
 	void addEnemies();
 	bool addedEnemies;
@@ -42,7 +45,7 @@ public:
 	float playerScore;
 	
 	ofImage background;
-	ofSoundPlayer bgMusic;
+	ofSoundPlayer igMusic;
 	ofTrueTypeFont text;
 
 	Emitter gunEmitter;
