@@ -7,8 +7,6 @@ ParticleEmitter::ParticleEmitter() {
 	sys = new ParticleSystem();
 	createdSys = true;
 	init();
-
-	cout << "particleEmitter created" << endl;
 }
 
 ParticleEmitter::ParticleEmitter(ParticleSystem *s) {
@@ -78,7 +76,6 @@ void ParticleEmitter::start() {
 	if (started) return;
 	started = true;
 	lastSpawned = ofGetElapsedTimeMillis();
-	cout << "particleEmitter started" << endl;
 }
 
 void ParticleEmitter::stop() {
@@ -105,7 +102,6 @@ void ParticleEmitter::update() {
 	}
 
 	else if (((time - lastSpawned) > (60 / rate)) && started) {
-		cout << "shooting" << endl;
 		// spawn a new particle(s)
 		//
 		for (int i= 0; i < groupSize; i++)

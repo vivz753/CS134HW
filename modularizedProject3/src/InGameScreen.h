@@ -21,6 +21,7 @@ public:
 	void update();
 
 	void checkCollisions();
+	void removeDeadEmitters();
 
 	void keyPressed(int);
 	void keyReleased(int);

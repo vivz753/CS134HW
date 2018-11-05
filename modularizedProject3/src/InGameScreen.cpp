@@ -162,7 +162,9 @@ void InGameScreen::draw()
 
 		break;
 	case Level3:
-		catPumpkinBoss.draw();
+		if (catPumpkinBoss.emitting == true) {
+			catPumpkinBoss.draw();
+		}
 		ofDrawBitmapString("LEVEL 3", 20, ofGetWindowHeight() - 20);
 
 		break;
@@ -174,7 +176,9 @@ void InGameScreen::draw()
 	
 	//draw all enemy emitters
 	for (size_t i = 0; i < emitters.size(); i++) {
-		emitters[i].draw();
+		if (emitters[i].emitting == true) {
+			emitters[i].draw();
+		}
 	}
 
 	//draw particlesystem for collisions
@@ -191,6 +195,8 @@ void InGameScreen::update() {
 	for (size_t i = 0; i < emitters.size(); i++) {
 		emitters[i].update();
 	}
+
+	removeDeadEmitters();
 
 	//check if bullets hit enemy sprites
 	checkCollisions();
@@ -211,6 +217,7 @@ void InGameScreen::update() {
 	case Level3:
 		catPumpkinBoss.update();
 		if (catPumpkinBoss.hp <= 0) {
+			playerScore += 1000;
 			transition = true;
 			transitionScreen = HOME;
 		}
@@ -234,7 +241,7 @@ void InGameScreen::checkCollisions() {
 	case Level3:
 		catPumpkinBoss.checkCollision(gunEmitter.sys);
 		gunEmitter.checkCollision(catPumpkinBoss.sys);
-		gunEmitter.sys->checkCollisions(catPumpkinBoss.sys, pe);
+		playerScore += gunEmitter.sys->checkCollisions(catPumpkinBoss.sys, pe);
 		break;
 	}
 
@@ -262,6 +269,25 @@ void InGameScreen::checkCollisions() {
 	
 
 };
+
+void InGameScreen::removeDeadEmitters() {
+	if (emitters.size() == 0) return;
+	vector<Emitter>::iterator e = emitters.begin();
+	vector <Emitter>::iterator tmp;
+
+	// check which sprites have <=0 health and delete
+	while (e != emitters.end()) {
+		if (e->hp <=0) {
+			//          cout << "deleting sprite: " << s->name << endl;
+			tmp = emitters.erase(e);
+			e = tmp;
+
+			//give player 100 pts
+			playerScore += 100;
+		}
+		else e++;
+	}
+}
 
 void InGameScreen::keyPressed(int key) {
 	switch (key) {

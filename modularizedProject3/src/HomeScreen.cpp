@@ -128,11 +128,7 @@ void HomeScreen::keyPressed(int key) {
 };
 
 void HomeScreen::keyReleased(int key) {
-	//switch (key) {
-	//default:
-		cout << "key released" << endl;
-	//	break;
-	//}
+
 };
 
 void HomeScreen::mouseMoved(int x, int y) {

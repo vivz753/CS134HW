@@ -20,6 +20,8 @@ void Emitter::setPosition(ofVec3f p) {
 void Emitter::init() {
 	switch (emitterType) {
 	case EMITTERA:
+		totalHp = 200;
+		hp = totalHp;
 		
 		trans = ofVec3f(0, 0, 0);
 		width = 25;
@@ -30,24 +32,34 @@ void Emitter::init() {
 		lifespan = 1500;
 		velocity = ofVec3f(0, 250, 0);
 		childImage.load("pumpkincat.png");
+		parentImage.load("pumpkincat.png");
 		cout << "emitterA init" << endl;
-		
+		rectangle = ofRectangle(trans, width, height);
+
+		hpBar = ofRectangle(ofVec3f(trans.x, trans.y + height + 15), width, 5);
 		 
 		break;
 	case EMITTERB:
-		
+		totalHp = 500;
+		hp = totalHp;
 
 		//positioned at center of screen
 		trans = ofVec3f(ofGetWindowWidth() / 2, 0, 0);
-		width = 50;
-		height = 50;
+		width = 100;
+		height = 100;
 		childWidth = 50;
 		childHeight = 50;
 		rate = .5;
 		lifespan = 9000;
 		velocity = ofVec3f(0, 100, 0);
 	
-		childImage.load("skull.png");
+		childImage.load("pumpkincat.png");
+		parentImage.load("pumpkincat.png");
+
+		//area to detect collision
+		rectangle = ofRectangle(trans, width, height);
+
+		hpBar = ofRectangle(ofVec3f(trans.x, trans.y + height + 15), width, 5);
 
 		cout << "emitterB init" << endl;
 		break;
@@ -210,6 +222,11 @@ void Emitter::update() {
 			}
 			trans = ofVec3f(ofRandom(0, ofGetWindowWidth() - 50), 0, 0);
 		}
+
+		hpBar.setPosition(ofVec3f(trans.x, trans.y + height + 10));
+		hpBar.setWidth((hp / totalHp) * width);
+		rectangle.setPosition(trans);
+
 		break;
 
 		//EMITTER B releases sprites that move in a sin wave
@@ -218,6 +235,8 @@ void Emitter::update() {
 			if ((ofGetElapsedTimeMillis() - lastSpawned) > (1000 / rate)) {
 				shoot();
 			}
+
+
 			
 			//sinMovement = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, ofGetWidth() - 50);
 			//trans = ofVec3f(sinMovement,0,0);
@@ -225,6 +244,9 @@ void Emitter::update() {
 			//trans = ofVec3f(0, ofGetWindowWidth() / 2 - 25, 0);
 
 		}
+		hpBar.setPosition(ofVec3f(trans.x, trans.y + height + 10));
+		hpBar.setWidth((hp / totalHp) * width);
+		rectangle.setPosition(trans);
 		break;
 	case EMITTERC:
 		if (emitting) {
