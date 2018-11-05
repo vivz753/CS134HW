@@ -21,6 +21,8 @@ public:
 	//for gun emitters only
 	bool moving;
 	ofVec3f movingVector;
+	
+	Sprite * setSpriteSettings(Sprite *);
 
 	Emitter();
 	Emitter(EmitterType);
@@ -35,6 +37,7 @@ public:
 	void setrate(float);
 	void update();
 	void checkCollision(SpriteSystem *);
+	void checkCollision(Emitter);
 
 	void translate(int, int);
 	void translate(ofVec3f);

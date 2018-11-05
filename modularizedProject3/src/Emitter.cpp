@@ -29,7 +29,7 @@ void Emitter::init() {
 		rate = 2;
 		lifespan = 1500;
 		velocity = ofVec3f(0, 250, 0);
-		childImage.load("skull.png");
+		childImage.load("pumpkincat.png");
 		cout << "emitterA init" << endl;
 		
 		 
@@ -52,26 +52,25 @@ void Emitter::init() {
 		cout << "emitterB init" << endl;
 		break;
 	case EMITTERC:
-		
-		trans = ofVec3f(ofGetWindowWidth() / 2, 350, 0);
+		hp = 250;
+
+		trans = ofVec3f(ofGetWindowWidth() / 2 - 150, 50, 0);
 		width = 300;
 		height = 300;
 		childWidth = 50;
 		childHeight = 50;
 		rate = .5;
-		lifespan = 9000;
+		lifespan = -1;
 		velocity = ofVec3f(0, 100, 0);
 
 		childImage.load("skull.png");
 		parentImage.load("pumpkincat.png");
 
-		//fill me out
+		//area to detect collision
+		rectangle = ofRectangle(trans, width, height);
 
+		hpBar = ofRectangle(ofVec3f(trans.x, trans.y + height + 15), width, 5);
 
-
-
-
-		//
 		break;
 	case GUN:
 		//holds the particleEmitter for explosion effect upon collision
@@ -88,6 +87,7 @@ void Emitter::init() {
 		childImage.load("thinarrow.png");
 		cout << "gun init" << endl;
 
+		//area to detect collision
 		rectangle = ofRectangle(trans, width, height);
 
 		hpBar = ofRectangle(ofVec3f(trans.x, trans.y + height + 15), width, 5);
@@ -98,15 +98,26 @@ void Emitter::init() {
 }
 
 void Emitter::draw() {
-	if (emitterType == GUN || EMITTERC) {
+	//if (emitterType == GUN || emitterType == EMITTERC) {
 		//ofDrawRectangle(rectangle.getPosition(), rectangle.getHeight(), rectangle.getWidth());
 		parentImage.draw(trans, width, height);
 
-		ofSetColor(0,255,0);
+		//green hp if more than 50%
+		if (hp > 250) {
+			ofSetColor(0, 255, 0);
+		}
+		//yellow hp if less than or equal to 50%
+		else if (hp <= 250 && hp>125) {
+			ofSetColor(255, 255, 0);
+		}
+		//red hp if less than or equal to 25%
+		else if (hp <= 125) {
+			ofSetColor(255, 0, 0);
+		}
 		ofDrawRectangle(hpBar);
 		ofSetColor(255, 255, 255);
 
-	}
+	//}
 	sys->draw();
 };
 
@@ -123,46 +134,59 @@ void Emitter::shoot() {
 	Sprite * sprite;
 
 	//init sprite depending on type of enemy
+
 	switch (emitterType) {
 	case EMITTERA:
 		sprite = new Sprite(A);
+		sprite = setSpriteSettings(sprite);
 		break;
 	case EMITTERB:
 		sprite = new Sprite(B);
+		sprite = setSpriteSettings(sprite);
 		break;
 	case EMITTERC:
 		sprite = new Sprite(C);
+		sprite = setSpriteSettings(sprite);
+
 		break;
 	case GUN:
 		sprite = new Sprite(BULLET);
+		sprite = setSpriteSettings(sprite);
+
+		//spawnPoint is from the top of sprite instead of the default bottom--which is used for monster emitters
+		ofVec3f spawnPoint = ofVec3f(trans.x + width / 2 - sprite->width / 2, trans.y);
+		sprite->setPosition(spawnPoint);
 		break;
 	}	
 
-	//sets the image
+	
+	sys->add(*sprite);
+};
+
+Sprite * Emitter::setSpriteSettings(Sprite * sprite) {
 	sprite->setImage(childImage);
 	sprite->width = childWidth;
 	sprite->height = childHeight;
 	sprite->rectangle.setWidth(childWidth);
 	sprite->rectangle.setHeight(childHeight);
-	//sprite->init();
 
-	//centers the position of the childSprite to come out of the center of the emitter
-	ofVec3f centered = ofVec3f(trans.x + width / 2 - sprite->width / 2, trans.y);
-	sprite->setPosition(centered);
+	ofVec3f spawnPoint = ofVec3f(trans.x + width / 2 - sprite->width / 2, trans.y + height);
+	sprite->setPosition(spawnPoint);
 
-	
 	sprite->lifespan = lifespan;
 	sprite->velocity = velocity;
-	
+
 	lastSpawned = ofGetElapsedTimeMillis();
 	sprite->birthtime = lastSpawned;
-	sys->add(*sprite);
-};
+
+	return sprite;
+}
 
 void Emitter::update() {
 	float sinMovement;
 
 	switch (emitterType) {
+
 	case GUN:
 		//shoot at a steady rate
 		if (emitting) {
@@ -175,6 +199,7 @@ void Emitter::update() {
 		hpBar.setWidth((hp/500) * width);
 		rectangle.setPosition(trans);
 		break;
+
 		//EMITTER A moves randomly along the x-axis at the top & releases sprites at rate 
 	case EMITTERA:
 		if (emitting) {
@@ -201,9 +226,24 @@ void Emitter::update() {
 		break;
 	case EMITTERC:
 		if (emitting) {
+			if ((ofGetElapsedTimeMillis() - lastSpawned) > (1000 / rate)) {
+				shoot();
+			}
 
+			sinMovement = ofMap(sin(ofGetElapsedTimef()), -1, 1, 200, 500);
+			trans = ofVec3f(sinMovement,0,0);
+
+
+			
 		}
+
+		hpBar.setPosition(ofVec3f(trans.x, trans.y + height + 10));
+
+		cout << "Emitter::update(): boss hp is " << hp << endl;
+		hpBar.setWidth((hp / 500) * width);
+		rectangle.setPosition(trans);
 		break;
+
 	}
 	sys->update();
 };
@@ -217,22 +257,25 @@ void Emitter::translate(int x, int y) {
 };
 
 
-
-////translate the Emitter using WASD keys
-//void Emitter::translate(ofVec3f v) {
-//	ofVec3f newPos = trans + v / ofGetFrameRate();
-//	if (newPos.x < (ofGetWindowWidth() - width) && newPos.x>0 && newPos.y < (ofGetWindowHeight() - height) && newPos.y>0) {
-//		trans += v / ofGetFrameRate();
-//	}
-//};
-
 void Emitter::checkCollision(SpriteSystem * enemySprites) {
 	for (vector<Sprite>::iterator i = enemySprites->sprites.begin(); i != enemySprites->sprites.end(); i++) {
 		if (i->rectangle.intersects(rectangle)) {
 			i->lifespan = 1;
 			hp -= 50;
+
+			cout << "collided so hp is: " << hp << endl;
 		}
 		
 	}
+
+};
+
+void Emitter::checkCollision(Emitter boss) {
+		if (boss.rectangle.intersects(rectangle)) {
+			hp -= 50;
+
+			cout << "collided w/ boss" << endl;
+		}
+
 
 };

@@ -41,6 +41,8 @@ public:
 	Emitter emitterC;
 	Emitter emitterB2;
 
+	bool beatLevelOne;
+
 	ParticleEmitter * pe;
 
 	vector<Emitter> emitters;
