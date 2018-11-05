@@ -36,9 +36,9 @@ public:
 	ofTrueTypeFont text;
 
 	Emitter gunEmitter;
+	Emitter catPumpkinBoss;
 	Emitter emitterA;
 	Emitter emitterB;
-	Emitter emitterC;
 	Emitter emitterB2;
 
 	bool beatLevelOne;

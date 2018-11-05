@@ -98,10 +98,10 @@ void InGameScreen::init()
 		break;
 	case Level3:
 
-		emitterC.hp = 500;
 
-		emitterC = Emitter(EMITTERC);
-		emitters.push_back(emitterC);
+
+		catPumpkinBoss = Emitter(EMITTERC);
+		//emitters.push_back(emitterC);
 		
 		cout << "emitter size: " << emitters.size() << endl;
 		cout << "switched to level 3" << endl;
@@ -162,15 +162,15 @@ void InGameScreen::draw()
 
 		break;
 	case Level3:
-
+		catPumpkinBoss.draw();
 		ofDrawBitmapString("LEVEL 3", 20, ofGetWindowHeight() - 20);
-		ofDrawBitmapString("BOSS HP: " + to_string(emitterC.hp), 20, 60);
 
 		break;
 	}
 
 	//draw gun
 	gunEmitter.draw();
+
 	
 	//draw all enemy emitters
 	for (size_t i = 0; i < emitters.size(); i++) {
@@ -209,10 +209,10 @@ void InGameScreen::update() {
 		}
 		break;
 	case Level3:
-		if (emitterC.hp <= 0) {
+		catPumpkinBoss.update();
+		if (catPumpkinBoss.hp <= 0) {
 			transition = true;
 			transitionScreen = HOME;
-
 		}
 		break;
 	}
@@ -224,14 +224,24 @@ void InGameScreen::update() {
 
 	}
 
-
+	pe->update();
 
 };
 
 void InGameScreen::checkCollisions() {
+
+	switch (levelType) {
+	case Level3:
+		catPumpkinBoss.checkCollision(gunEmitter.sys);
+		gunEmitter.checkCollision(catPumpkinBoss.sys);
+		gunEmitter.sys->checkCollisions(catPumpkinBoss.sys, pe);
+		break;
+	}
+
+
 	for (size_t i = 0; i < emitters.size(); i++) {
 		//checks if bullets hit emitter enemy sprites
-		pe->update();
+		/*pe->update();*/
 
 		//update playerScore everytime there is a collision (edit point amount in SpriteSystem checkCollisions method)
 		playerScore += gunEmitter.sys->checkCollisions(emitters[i].sys, pe);
@@ -243,14 +253,13 @@ void InGameScreen::checkCollisions() {
 		//check if emitters are collindg w/ gun
 		gunEmitter.checkCollision(emitters[i]);
 
-
-		//test
-		emitterC.checkCollision(gunEmitter.sys);
+		//check if any emitters are hit by bullets
+		emitters[i].checkCollision(gunEmitter.sys);
+		
+		
 	}
 
-	//if (levelType == Level3) {
-	//	emitterC.checkCollision(gunEmitter.sys);
-	//}
+	
 
 };
 
@@ -265,6 +274,16 @@ void InGameScreen::keyPressed(int key) {
 		for (size_t i = 0; i < emitters.size(); i++) {
 			emitters[i].start();
 		}
+
+		if (levelType == Level3) {
+			catPumpkinBoss.start();
+		}
+		/*catPumpkinBoss.start();
+		switch (levelType) {
+		case Level3:
+			catPumpkinBoss.start();
+			break;
+		}*/
 		break;
 	case 'q':
 		transition = true;

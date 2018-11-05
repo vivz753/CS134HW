@@ -52,7 +52,8 @@ void Emitter::init() {
 		cout << "emitterB init" << endl;
 		break;
 	case EMITTERC:
-		hp = 250;
+		totalHp = 3000;
+		hp = 3000;
 
 		trans = ofVec3f(ofGetWindowWidth() / 2 - 150, 50, 0);
 		width = 300;
@@ -74,6 +75,7 @@ void Emitter::init() {
 		break;
 	case GUN:
 		//holds the particleEmitter for explosion effect upon collision
+		totalHp = 500;
 		hp = 500;
 		trans = ofVec3f(400, 400, 0);
 		width = 50;
@@ -98,26 +100,26 @@ void Emitter::init() {
 }
 
 void Emitter::draw() {
-	//if (emitterType == GUN || emitterType == EMITTERC) {
+
 		//ofDrawRectangle(rectangle.getPosition(), rectangle.getHeight(), rectangle.getWidth());
 		parentImage.draw(trans, width, height);
 
 		//green hp if more than 50%
-		if (hp > 250) {
+		if (hp > totalHp/2) {
 			ofSetColor(0, 255, 0);
 		}
 		//yellow hp if less than or equal to 50%
-		else if (hp <= 250 && hp>125) {
+		else if (hp <= totalHp/2 && hp>totalHp/4) {
 			ofSetColor(255, 255, 0);
 		}
 		//red hp if less than or equal to 25%
-		else if (hp <= 125) {
+		else if (hp <= totalHp/4) {
 			ofSetColor(255, 0, 0);
 		}
 		ofDrawRectangle(hpBar);
 		ofSetColor(255, 255, 255);
 
-	//}
+
 	sys->draw();
 };
 
@@ -196,7 +198,7 @@ void Emitter::update() {
 		}
 		
 		hpBar.setPosition(ofVec3f(trans.x, trans.y + height + 10));
-		hpBar.setWidth((hp/500) * width);
+		hpBar.setWidth((hp/totalHp) * width);
 		rectangle.setPosition(trans);
 		break;
 
@@ -229,18 +231,12 @@ void Emitter::update() {
 			if ((ofGetElapsedTimeMillis() - lastSpawned) > (1000 / rate)) {
 				shoot();
 			}
-
 			sinMovement = ofMap(sin(ofGetElapsedTimef()), -1, 1, 200, 500);
-			trans = ofVec3f(sinMovement,0,0);
-
-
-			
+			trans = ofVec3f(sinMovement,50,0);
 		}
 
 		hpBar.setPosition(ofVec3f(trans.x, trans.y + height + 10));
-
-		cout << "Emitter::update(): boss hp is " << hp << endl;
-		hpBar.setWidth((hp / 500) * width);
+		hpBar.setWidth((hp / totalHp) * width);
 		rectangle.setPosition(trans);
 		break;
 
@@ -262,19 +258,15 @@ void Emitter::checkCollision(SpriteSystem * enemySprites) {
 		if (i->rectangle.intersects(rectangle)) {
 			i->lifespan = 1;
 			hp -= 50;
-
-			cout << "collided so hp is: " << hp << endl;
 		}
 		
 	}
 
 };
 
-void Emitter::checkCollision(Emitter boss) {
-		if (boss.rectangle.intersects(rectangle)) {
+void Emitter::checkCollision(Emitter enemyEmitter) {
+		if (enemyEmitter.rectangle.intersects(rectangle)) {
 			hp -= 50;
-
-			cout << "collided w/ boss" << endl;
 		}
 
 

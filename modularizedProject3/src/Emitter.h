@@ -16,7 +16,7 @@ public:
 	float lastSpawned;
 	bool emitting;
 	float hp;
-	
+	float totalHp;
 
 	//for gun emitters only
 	bool moving;
