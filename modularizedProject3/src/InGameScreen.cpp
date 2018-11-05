@@ -7,6 +7,8 @@ InGameScreen::InGameScreen() {
 	//initial settings
 	screenType = INGAME;
 	levelType = Level1;
+	beatLevelOne = false;
+	beatLevelTwo = false;
 
 
 	//playerScore is a global variable throughout the levels
@@ -14,8 +16,9 @@ InGameScreen::InGameScreen() {
 };
 
 void InGameScreen::setLevel(LevelType level) {
+	confirmedSwitch = false;
 	//every time we change levels, stop the emitters, and then init()
-	gunEmitter.stop();
+	//gunEmitter.stop();
 	for (size_t i = 0; i < emitters.size(); i++) {
 		emitters[i].emitting = false;
 	}
@@ -23,6 +26,7 @@ void InGameScreen::setLevel(LevelType level) {
 	emitters.clear();
 
 	levelType = level;
+	
 	init();
 };
 
@@ -44,78 +48,75 @@ void InGameScreen::setLevel(int level) {
 
 //this is run everytime a level is switched, or when user starts game, or when user selects a specific level
 void InGameScreen::init()
-{
+{		
 
-	//player HP gets reset at each level
-	gunEmitter.hp = 500;
+		allDead = false;
+		//player HP gets reset at each level
+		gunEmitter.hp = 500;
 
-	//only create the gunEmitter once
-	gunEmitter = Emitter(GUN);
-	
-	//create one particle system for collision effets
-	pe = new ParticleEmitter();
+		//only create the gunEmitter once
+		gunEmitter = Emitter(GUN);
 
-	switch (levelType) {
-	case Level1:
-		beatLevelOne = false;
-		emitterA = Emitter(EMITTERA);
-		emitterB = Emitter(EMITTERB);
-		emitterB2 = Emitter(EMITTERB);
+		//create one particle system for collision effets
+		pe = new ParticleEmitter();
 
+		switch (levelType) {
+		case Level1:
+				beatLevelOne = false;
+				emitterA = Emitter(EMITTERA);
+				
+				emitters.push_back(emitterA);
 
-		emitters.push_back(emitterA);
+				emitterA2 = Emitter(EMITTERA2);	
+				emitters.push_back(emitterA2);
 
-		emitterB.sys->applySinMovement(-1);
-		emitters.push_back(emitterB);
+				cout << "emitter size: " << emitters.size() << endl;
+				cout << "switched to level 1" << endl;
+			break;
+		case Level2:
+			beatLevelTwo = false;
 
-		emitterB2.sys->applySinMovement(1);
-		emitters.push_back(emitterB2);
+			emitterB = Emitter(EMITTERB);
+			emitters.push_back(emitterB);
 
-		cout << "emitter size: " << emitters.size() << endl;
-		cout << "switched to level 1" << endl;
-		break;
-	case Level2:
+			emitterA2 = Emitter(EMITTERA2);
+			emitters.push_back(emitterA2);
 
-		//emitterA.init();
-		emitterA = Emitter(EMITTERA);
-		emitterA.sys->applySinMovement(1);
-		emitters.push_back(emitterA);
+			emitterB2 = Emitter(EMITTERB);
+			emitterB2.setPosition(ofVec3f(200, 500, 0));
+			//emitterB2.sys->applySinMovement(-1);
+			emitters.push_back(emitterB2);
 
-		emitterB = Emitter(EMITTERB);
-		emitterB2 = Emitter(EMITTERB);
+			cout << "emitter size: " << emitters.size() << endl;
 
-		emitterB.sys->applySinMovement(1);
-		emitters.push_back(emitterB);
-		
-
-		emitterB2.setPosition(ofVec3f(0, -100, 0));
-		emitterB2.sys->applySinMovement(-1);
-		emitters.push_back(emitterB2);
-
-		cout << "emitter size: " << emitters.size() << endl;
-		
-		cout << "switched to level 2" << endl;
-		break;
-	case Level3:
+			cout << "switched to level 2" << endl;
+			break;
+		case Level3:
 
 
 
-		catPumpkinBoss = Emitter(EMITTERC);
-		//emitters.push_back(emitterC);
-		
-		cout << "emitter size: " << emitters.size() << endl;
-		cout << "switched to level 3" << endl;
-		break;
-	}
-	
-	////initialize start menu elements
-	//text.load("arial.ttf", 32);
-	//background.load("northofthewall.jpg");
+			catPumpkinBoss = Emitter(EMITTERC);
+			catPumpkinBoss.start();
+			//emitters.push_back(emitterC);
 
-	////load starting bg music
-	//bgMusic.load("battle.mp3");
-	//bgMusic.play();
-	//bgMusic.setLoop(true);
+			cout << "emitter size: " << emitters.size() << endl;
+			cout << "switched to level 3" << endl;
+			break;
+		}
+
+		//start emitters
+		for (size_t i = 0; i < emitters.size(); i++) {
+			emitters[i].start();
+		}
+
+		////initialize start menu elements
+		//text.load("arial.ttf", 32);
+		//background.load("northofthewall.jpg");
+
+		////load starting bg music
+		//bgMusic.load("battle.mp3");
+		//bgMusic.play();
+		//bgMusic.setLoop(true);
 };
 
 void InGameScreen::terminate() {
@@ -123,11 +124,12 @@ void InGameScreen::terminate() {
 	//stop music, reset transition variable, set the level back to 1, reset score
 	bgMusic.stop();
 	transition = false;
+	beatLevelOne = false;
+	beatLevelTwo = false;
 	levelType = Level1;
 	playerScore = 0;
 
 	//stop emitters from firing
-	
 	for (size_t i = 0; i < emitters.size(); i++) {
 		emitters[i].emitting = false;
 	}
@@ -138,100 +140,136 @@ void InGameScreen::terminate() {
 
 void InGameScreen::draw()
 {
-	//draw background image
-	/*background.resize(ofGetWindowWidth(), ofGetWindowHeight());
-	background.draw(0, 0);*/
-	/*text.drawString(to_string(gunEmitter.hp), 50, 50);
-	text.drawString(to_string(playerScore), 50, 150);*/
 	ofClear(0);
-	ofDrawBitmapString("HP: " + to_string(gunEmitter.hp), 20, 20);
-	ofDrawBitmapString(to_string(playerScore), 20, 40);
 
-	
-	
+	switch(levelType) {
 
-	switch (levelType) {
-	case Level1:
-	
-		ofDrawBitmapString("LEVEL 1: S to start, Q to quit, SPACE to fire", 20, ofGetWindowHeight() - 20);
-		
+	case WIN:
+		ofDrawBitmapString("YOU WIN", ofGetWindowWidth() / 2 - 200, ofGetWindowHeight() / 2);
+		ofDrawBitmapString("SCORE: " + to_string(playerScore), ofGetWindowWidth() / 2 - 200, ofGetWindowHeight() / 2 + 40);
+		ofDrawBitmapString("Q to go back to menu", ofGetWindowWidth() / 2 - 200, ofGetWindowHeight() / 2 + 200);
 		break;
-	case Level2:
-		
-		ofDrawBitmapString("LEVEL 2", 20, ofGetWindowHeight() - 20);
-
+	case LOSE:
+		ofDrawBitmapString("YOU LOSE", ofGetWindowWidth() / 2 - 200, ofGetWindowHeight() / 2);
+		ofDrawBitmapString("SCORE: " + to_string(playerScore), ofGetWindowWidth() / 2 - 200, ofGetWindowHeight() / 2 + 40);
+		ofDrawBitmapString("Q to go back to menu", ofGetWindowWidth() / 2 - 200, ofGetWindowHeight() / 2 + 200);
 		break;
-	case Level3:
-		if (catPumpkinBoss.emitting == true) {
-			catPumpkinBoss.draw();
+	default:
+		//draw background image
+		/*background.resize(ofGetWindowWidth(), ofGetWindowHeight());
+		background.draw(0, 0);*/
+
+		ofDrawBitmapString("HP: " + to_string(gunEmitter.hp), 20, 20);
+		ofDrawBitmapString("SCORE: " + to_string(playerScore), 20, 40);
+		switch (levelType) {
+		case Level1:
+			if (!beatLevelOne) {
+				ofDrawBitmapString("LEVEL 1: S to start, Q to quit, SPACE to fire", 20, ofGetWindowHeight() - 20);
+			}
+			else if (beatLevelOne) {
+				ofDrawBitmapString("S to continue onto level 2", 400, 400);
+			}
+			break;
+		case Level2:
+			if (!beatLevelTwo) {
+				ofDrawBitmapString("LEVEL 2", 20, ofGetWindowHeight() - 20);
+			}
+			else if (beatLevelTwo) {
+				ofDrawBitmapString("S to continue onto level 3", 400, 400);
+			}
+			break;
+		case Level3:
+			if (catPumpkinBoss.emitting == true) {
+				catPumpkinBoss.draw();
+			}
+			ofDrawBitmapString("LEVEL 3", 20, ofGetWindowHeight() - 20);
+			break;
 		}
-		ofDrawBitmapString("LEVEL 3", 20, ofGetWindowHeight() - 20);
+		//draw gun
+		gunEmitter.draw();
+
+		//draw all enemy emitters
+		for (size_t i = 0; i < emitters.size(); i++) {
+			if (emitters[i].emitting == true) {
+				emitters[i].draw();
+			}
+		}
+		//draw particlesystem for collisions
+		pe->draw();
 
 		break;
 	}
 
-	//draw gun
-	gunEmitter.draw();
-
 	
-	//draw all enemy emitters
-	for (size_t i = 0; i < emitters.size(); i++) {
-		if (emitters[i].emitting == true) {
-			emitters[i].draw();
-		}
-	}
 
-	//draw particlesystem for collisions
-	pe->draw();
 
 };
 
 void InGameScreen::update() {
-	
-	//update gun
-	gunEmitter.update();
+	if (levelType != WIN || LOSE) {
+		//update gun
+		gunEmitter.update();
 
-	//update enemy emitters
-	for (size_t i = 0; i < emitters.size(); i++) {
-		emitters[i].update();
+		//update enemy emitters
+		for (size_t i = 0; i < emitters.size(); i++) {
+			emitters[i].update();
+
+			if (emitters[i].spritesFollowGun) {
+				emitters[i].velocity = gunEmitter.trans - emitters[i].trans;
+			}
+		}
+
+		removeDeadEmitters();
+
+		//check if bullets hit enemy sprites
+		checkCollisions();
+
+		switch (levelType) {
+
+		case Level1:
+			if (!beatLevelOne && allDead) {
+				beatLevelOne = true;
+			}
+			else if (confirmedSwitch) {
+				setLevel(2);
+			}
+			break;
+		case Level2:
+			if (allDead && !beatLevelTwo) {
+				beatLevelTwo = true;
+			}
+			else if (confirmedSwitch) {
+				setLevel(3);
+			}
+			break;
+		case Level3:
+			catPumpkinBoss.update();
+			if (catPumpkinBoss.hp <= 0) {
+				playerScore += 1000;
+				setLevel(WIN);
+			}
+			break;
+		}
+
+		//if hp hits 0 or below, transition the screen to home
+		if (gunEmitter.hp <= 0) {
+			setLevel(LOSE);
+		}
+
+		pe->update();
 	}
 
-	removeDeadEmitters();
+	else {
+		switch (levelType) {
+		case WIN:
 
-	//check if bullets hit enemy sprites
-	checkCollisions();
+			break;
 
-	switch (levelType) {
-	
-	case Level1:
-		if (playerScore >= 500 && !beatLevelOne) {
-			beatLevelOne = true;
-			setLevel(2);
+		case LOSE:
+
+			break;
 		}
-		break;
-	case Level2:
-		if (playerScore >= 1500 && beatLevelOne) {
-			setLevel(3);
-		}
-		break;
-	case Level3:
-		catPumpkinBoss.update();
-		if (catPumpkinBoss.hp <= 0) {
-			playerScore += 1000;
-			transition = true;
-			transitionScreen = HOME;
-		}
-		break;
 	}
-
-	//if hp hits 0 or below, transition the screen to home
-	if (gunEmitter.hp <= 0) {
-		transition = true;
-		transitionScreen = HOME;
-
-	}
-
-	pe->update();
 
 };
 
@@ -271,21 +309,26 @@ void InGameScreen::checkCollisions() {
 };
 
 void InGameScreen::removeDeadEmitters() {
-	if (emitters.size() == 0) return;
-	vector<Emitter>::iterator e = emitters.begin();
-	vector <Emitter>::iterator tmp;
+	if (emitters.size() == 0) {
+		allDead = true;
+		return;
+	}
+	else {
+		vector<Emitter>::iterator e = emitters.begin();
+		vector <Emitter>::iterator tmp;
 
-	// check which sprites have <=0 health and delete
-	while (e != emitters.end()) {
-		if (e->hp <=0) {
-			//          cout << "deleting sprite: " << s->name << endl;
-			tmp = emitters.erase(e);
-			e = tmp;
+		// check which sprites have <=0 health and delete
+		while (e != emitters.end()) {
+			if (e->hp <= 0) {
+				//          cout << "deleting sprite: " << s->name << endl;
+				tmp = emitters.erase(e);
+				e = tmp;
 
-			//give player 100 pts
-			playerScore += 100;
+				//give player 100 pts
+				playerScore += 100;
+			}
+			else e++;
 		}
-		else e++;
 	}
 }
 
@@ -301,20 +344,25 @@ void InGameScreen::keyPressed(int key) {
 			emitters[i].start();
 		}
 
-		if (levelType == Level3) {
-			catPumpkinBoss.start();
+		if (beatLevelOne) {
+			confirmedSwitch = true;
 		}
-		/*catPumpkinBoss.start();
-		switch (levelType) {
-		case Level3:
+
+		else if (beatLevelTwo) {
+			confirmedSwitch = true;
+			//catPumpkinBoss.start();
+		}
+
+		/*else if (levelType == Level3) {
 			catPumpkinBoss.start();
-			break;
 		}*/
+
 		break;
 	case 'q':
 		transition = true;
 		transitionScreen = HOME;
 		break;
+
 
 	}
 };

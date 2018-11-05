@@ -4,6 +4,7 @@ Emitter::Emitter() {
 	sys = new SpriteSystem();
 	emitting = false;
 	rectangle = ofRectangle(ofVec3f(0, 0, 0), 0, 0);
+	spritesFollowGun = false;
 }
 
 Emitter::Emitter(EmitterType eType) {
@@ -20,16 +21,18 @@ void Emitter::setPosition(ofVec3f p) {
 void Emitter::init() {
 	switch (emitterType) {
 	case EMITTERA:
-		totalHp = 200;
+	case EMITTERA2:
+		spritesFollowGun = false;
+		//change to 750 later
+		totalHp = 250;
 		hp = totalHp;
-		
 		trans = ofVec3f(0, 0, 0);
-		width = 25;
-		height = 25;
-		childWidth = 50;
-		childHeight = 50;
+		width = 75;
+		height = 75;
+		childWidth = 25;
+		childHeight = 25;
 		rate = 2;
-		lifespan = 1500;
+		lifespan = 3000;
 		velocity = ofVec3f(0, 250, 0);
 		childImage.load("pumpkincat.png");
 		parentImage.load("pumpkincat.png");
@@ -40,6 +43,8 @@ void Emitter::init() {
 		 
 		break;
 	case EMITTERB:
+		spritesFollowGun = true;
+
 		totalHp = 500;
 		hp = totalHp;
 
@@ -53,8 +58,8 @@ void Emitter::init() {
 		lifespan = 9000;
 		velocity = ofVec3f(0, 100, 0);
 	
-		childImage.load("pumpkincat.png");
-		parentImage.load("pumpkincat.png");
+		childImage.load("skull.png");
+		parentImage.load("skull.png");
 
 		//area to detect collision
 		rectangle = ofRectangle(trans, width, height);
@@ -151,6 +156,7 @@ void Emitter::shoot() {
 
 	switch (emitterType) {
 	case EMITTERA:
+	case EMITTERA2:
 		sprite = new Sprite(A);
 		sprite = setSpriteSettings(sprite);
 		break;
@@ -177,6 +183,19 @@ void Emitter::shoot() {
 	sys->add(*sprite);
 };
 
+void Emitter::shootEmitter(EmitterType type) {
+
+	Emitter * emitter = new Emitter(type);
+
+	//init sprite depending on type of enemy
+
+	//spawnPoint is from the top of sprite instead of the default bottom--which is used for monster emitters
+	ofVec3f spawnPoint = ofVec3f(trans.x, trans.y);
+	emitter->setPosition(spawnPoint);
+
+	minionEmitters.push_back(*emitter);
+};
+
 Sprite * Emitter::setSpriteSettings(Sprite * sprite) {
 	sprite->setImage(childImage);
 	sprite->width = childWidth;
@@ -198,6 +217,7 @@ Sprite * Emitter::setSpriteSettings(Sprite * sprite) {
 
 void Emitter::update() {
 	float sinMovement;
+	float cosMovement;
 
 	switch (emitterType) {
 
@@ -208,24 +228,26 @@ void Emitter::update() {
 				shoot();
 			}
 		}
-		
-		hpBar.setPosition(ofVec3f(trans.x, trans.y + height + 10));
-		hpBar.setWidth((hp/totalHp) * width);
-		rectangle.setPosition(trans);
 		break;
 
-		//EMITTER A moves randomly along the x-axis at the top & releases sprites at rate 
+		//EMITTER A moves along the x-axis at the top & releases sprites at rate 
 	case EMITTERA:
 		if (emitting) {
 			if ((ofGetElapsedTimeMillis() - lastSpawned) > (1000 / rate)) {
 				shoot();
 			}
-			trans = ofVec3f(ofRandom(0, ofGetWindowWidth() - 50), 0, 0);
+			sinMovement = ofMap(sin(ofGetElapsedTimef()), -1, 1, ofGetWidth()/2, ofGetWidth() - width);
+			trans = ofVec3f(sinMovement, 0, 0);
 		}
-
-		hpBar.setPosition(ofVec3f(trans.x, trans.y + height + 10));
-		hpBar.setWidth((hp / totalHp) * width);
-		rectangle.setPosition(trans);
+		break;
+	case EMITTERA2:
+		if (emitting) {
+			if ((ofGetElapsedTimeMillis() - lastSpawned) > (1000 / rate)) {
+				shoot();
+			}
+			cosMovement = ofMap(cos(ofGetElapsedTimef()), -1, 1, 0 + width, ofGetWidth()/2 );
+			trans = ofVec3f(cosMovement, 100, 0);
+		}
 
 		break;
 
@@ -234,19 +256,12 @@ void Emitter::update() {
 		if (emitting) {
 			if ((ofGetElapsedTimeMillis() - lastSpawned) > (1000 / rate)) {
 				shoot();
-			}
-
-
-			
-			//sinMovement = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, ofGetWidth() - 50);
-			//trans = ofVec3f(sinMovement,0,0);
-
+				//shootEmitter(EMITTERA);
+			}			
+			sinMovement = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, ofGetHeight() + 50);
+			trans = ofVec3f(sinMovement,0,0);
 			//trans = ofVec3f(0, ofGetWindowWidth() / 2 - 25, 0);
-
 		}
-		hpBar.setPosition(ofVec3f(trans.x, trans.y + height + 10));
-		hpBar.setWidth((hp / totalHp) * width);
-		rectangle.setPosition(trans);
 		break;
 	case EMITTERC:
 		if (emitting) {
@@ -257,12 +272,14 @@ void Emitter::update() {
 			trans = ofVec3f(sinMovement,50,0);
 		}
 
-		hpBar.setPosition(ofVec3f(trans.x, trans.y + height + 10));
-		hpBar.setWidth((hp / totalHp) * width);
-		rectangle.setPosition(trans);
 		break;
 
 	}
+
+	hpBar.setPosition(ofVec3f(trans.x, trans.y + height + 10));
+	hpBar.setWidth((hp / totalHp) * width);
+	rectangle.setPosition(trans);
+
 	sys->update();
 };
 

@@ -3,10 +3,14 @@
 #include "Sprite.h"
 class SpriteSystem;
 
-typedef enum { EMITTERA, EMITTERB, EMITTERC, GUN } EmitterType;
+typedef enum { EMITTERA, EMITTERA2, EMITTERB, EMITTERC, GUN } EmitterType;
 
 class Emitter {
 public:
+	bool spritesFollowGun;
+	vector<Emitter> minionEmitters;
+	void shootEmitter(EmitterType);
+
 	ofVec3f trans;
 	void setPosition(ofVec3f);
 	float width, height;

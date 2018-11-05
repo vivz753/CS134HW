@@ -6,10 +6,12 @@
 #include "Emitter.h"
 #include "Sprite.h"
 
-typedef enum { Level1, Level2, Level3 } LevelType;
+typedef enum { Level1, Level2, Level3, WIN, LOSE } LevelType;
 
 class InGameScreen : public Screen {
 public:
+	bool confirmedSwitch = false;
+
 	InGameScreen();
 	//InGameScreen(LevelName)
 	LevelType levelType;
@@ -39,10 +41,13 @@ public:
 	Emitter gunEmitter;
 	Emitter catPumpkinBoss;
 	Emitter emitterA;
+	Emitter emitterA2;
 	Emitter emitterB;
 	Emitter emitterB2;
 
 	bool beatLevelOne;
+	bool beatLevelTwo;
+	bool allDead;
 
 	ParticleEmitter * pe;
 

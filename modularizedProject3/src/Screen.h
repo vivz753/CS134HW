@@ -1,5 +1,5 @@
 #pragma once
-typedef enum { HOME, INGAME, WIN, LOSE } ScreenType;
+typedef enum { HOME, INGAME } ScreenType;
 
 class Screen {
 public:
