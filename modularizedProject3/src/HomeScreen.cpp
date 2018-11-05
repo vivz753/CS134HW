@@ -40,22 +40,20 @@ void HomeScreen::draw()
 
 	/*background.resize(ofGetWindowWidth(), ofGetWindowHeight());
 	background.draw(0, 0);*/
-
+	ofClear(0);
+	ofDrawBitmapString("PUMPKIN CAT & THE SKULLS: A 2D Shooter", ofGetWindowWidth() / 2 - 150, ofGetWindowHeight() / 2 - 100);
 	switch (menuType) {
 	case DEFAULT:
-		ofClear(0);
-		ofDrawBitmapString("SKULL & PUMPKIN CATS: A 2D Shooter", ofGetWindowWidth() / 2 - 150, ofGetWindowHeight() / 2 - 100);
 		//ofDrawBitmapString("A 2D Shooter", ofGetWindowWidth() / 2 - 50, ofGetWindowHeight() / 2 - 30);
-		ofDrawBitmapString("S to start", ofGetWindowWidth()/2-150, ofGetWindowHeight() / 2 - 70);
-		ofDrawBitmapString("L to select level", ofGetWindowWidth() / 2 - 150, ofGetWindowHeight() / 2 - 50);
+		ofDrawBitmapString("S to start", ofGetWindowWidth()/2-50, ofGetWindowHeight() / 2);
+		ofDrawBitmapString("L to select level", ofGetWindowWidth() / 2 - 75, ofGetWindowHeight() / 2 + 30);
 		//text.drawString("press s to start; l to select level", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
 	case SELECTLEVEL:
-		ofClear(0);
-		ofDrawBitmapString("1 for level 1", ofGetWindowWidth() / 2 - 150, ofGetWindowHeight() / 2 - 70);
-		ofDrawBitmapString("2 for level 2", ofGetWindowWidth() / 2 - 150, ofGetWindowHeight() / 2 - 50);
-		ofDrawBitmapString("3 for level 3", ofGetWindowWidth() / 2 - 150, ofGetWindowHeight() / 2 - 30);
-		ofDrawBitmapString("B to go back", ofGetWindowWidth() / 2 - 150, ofGetWindowHeight() / 2);
+		ofDrawBitmapString("1 for level 1", ofGetWindowWidth() / 2 - 60, ofGetWindowHeight() / 2);
+		ofDrawBitmapString("2 for level 2", ofGetWindowWidth() / 2 - 60, ofGetWindowHeight() / 2 +30);
+		ofDrawBitmapString("3 for level 3", ofGetWindowWidth() / 2 - 60, ofGetWindowHeight() / 2 +60);
+		ofDrawBitmapString("B to go back", ofGetWindowWidth() / 2 - 60, ofGetWindowHeight() / 2 + 120);
 		//text.drawString("press 1 for level1, 2 for level2, 3 for level3", ofGetWindowWidth() * 3 / 10, ofGetWindowHeight() * 13 / 20);
 		break;
 	}

@@ -24,7 +24,7 @@ void Emitter::init() {
 	case EMITTERA2:
 		spritesFollowGun = false;
 		//change to 750 later
-		totalHp = 250;
+		totalHp = 750;
 		hp = totalHp;
 		trans = ofVec3f(0, 0, 0);
 		width = 75;
@@ -32,7 +32,7 @@ void Emitter::init() {
 		childWidth = 25;
 		childHeight = 25;
 		rate = 2;
-		lifespan = 3000;
+		lifespan = 6000;
 		velocity = ofVec3f(0, 250, 0);
 		childImage.load("pumpkincat.png");
 		parentImage.load("pumpkincat.png");
@@ -69,16 +69,17 @@ void Emitter::init() {
 		cout << "emitterB init" << endl;
 		break;
 	case EMITTERC:
+		spritesFollowGun = true;
 		totalHp = 3000;
 		hp = 3000;
 
 		trans = ofVec3f(ofGetWindowWidth() / 2 - 150, 50, 0);
 		width = 300;
 		height = 300;
-		childWidth = 50;
-		childHeight = 50;
-		rate = .5;
-		lifespan = -1;
+		childWidth = 25;
+		childHeight = 25;
+		rate = 1;
+		lifespan = 15000;
 		velocity = ofVec3f(0, 100, 0);
 
 		childImage.load("skull.png");
@@ -171,6 +172,7 @@ void Emitter::shoot() {
 		sprite = new Sprite(C);
 		sprite = setSpriteSettings(sprite);
 		shootSound.load("shoot3.wav");
+			
 		break;
 	case GUN:
 		shootSound.load("shoot.wav");
@@ -219,6 +221,25 @@ Sprite * Emitter::setSpriteSettings(Sprite * sprite) {
 	return sprite;
 }
 
+//use for emitter b
+void Emitter::update(int i) {
+	if (emitting) {
+		if ((ofGetElapsedTimeMillis() - lastSpawned) > (1000 / rate)) {
+			shoot();
+			//shootEmitter(EMITTERA);
+		}
+		float sinMovement = ofMap(sin(i * 300 + ofGetElapsedTimef()), -1, 1, 0, ofGetWidth() - width);
+		float cosMovement = ofMap(cos(i * 300 + ofGetElapsedTimef()), -1, 1, 0, ofGetHeight() - height);
+		trans = ofVec3f(sinMovement, cosMovement, 0);
+		//trans = ofVec3f(0, ofGetWindowWidth() / 2 - 25, 0);
+	}
+	hpBar.setPosition(ofVec3f(trans.x, trans.y + height + 10));
+	hpBar.setWidth((hp / totalHp) * width);
+	rectangle.setPosition(trans);
+
+	sys->update();
+}
+
 void Emitter::update() {
 	float sinMovement;
 	float cosMovement;
@@ -262,8 +283,8 @@ void Emitter::update() {
 				shoot();
 				//shootEmitter(EMITTERA);
 			}			
-			sinMovement = ofMap(sin(ofGetElapsedTimef()), -1, 1, 0, ofGetWidth() - width);
-			cosMovement = ofMap(cos(ofGetElapsedTimef()), -1, 1, 0, ofGetHeight() - height);
+			sinMovement = ofMap(sin(50+ofGetElapsedTimef()), -1, 1, 0, ofGetWidth() - width);
+			cosMovement = ofMap(cos(50+ofGetElapsedTimef()), -1, 1, 0, ofGetHeight() - height);
 			trans = ofVec3f(sinMovement, cosMovement,0);
 			//trans = ofVec3f(0, ofGetWindowWidth() / 2 - 25, 0);
 		}

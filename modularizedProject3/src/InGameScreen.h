@@ -10,7 +10,7 @@ typedef enum { Level1, Level2, Level3, WIN, LOSE } LevelType;
 
 class InGameScreen : public Screen {
 public:
-
+	vector<float> scores;
 	ofSoundPlayer winSound;
 	ofSoundPlayer loseSound;
 
@@ -51,6 +51,8 @@ public:
 	Emitter emitterA2;
 	Emitter emitterB;
 	Emitter emitterB2;
+	Emitter emitterB3;
+	Emitter emitterB4;
 
 	bool beatLevelOne;
 	bool beatLevelTwo;

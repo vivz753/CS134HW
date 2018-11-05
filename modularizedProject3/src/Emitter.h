@@ -44,6 +44,7 @@ public:
 	void setVelocity(ofVec3f);
 	void setrate(float);
 	void update();
+	void update(int);
 	void checkCollision(SpriteSystem *);
 	void checkCollision(Emitter);
 

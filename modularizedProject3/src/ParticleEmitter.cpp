@@ -64,7 +64,7 @@ void ParticleEmitter::draw() {
 			ofDrawSphere(position, radius/10);  // just draw a small sphere as a placeholder
 			break;
 		case DiscEmitter:
-			ofDrawRectangle(position, 2, 2);
+			//ofDrawRectangle(position, 2, 2);
 			break;
 		default:
 			break;

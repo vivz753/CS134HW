@@ -34,18 +34,20 @@ public:
 
 class SpriteSystem {
 public:
-	ofSoundPlayer explodeSound;
 
+	ofSoundPlayer explodeSound;
 	ofVec3f collidedVector;
 	vector<Sprite> sprites;
 	bool collided;
 	bool appliedSinMovement;
 	bool normalSinMovement;
 	bool inverseSinMovement;
+	bool appliedCircularMovement;
 
 	void SpriteSystem::add(Sprite s) {
 		sprites.push_back(s);
 		s.name = "s" + to_string(sprites.size());
+	
 	};
 
 	void SpriteSystem::remove(int i) {
@@ -103,6 +105,10 @@ public:
 		}
 	}
 
+	void SpriteSystem::applyCircularMovement() {
+		appliedCircularMovement = true;
+	}
+
 	void SpriteSystem::update() {
 		if (sprites.size() == 0) return;
 		vector<Sprite>::iterator s = sprites.begin();
@@ -134,6 +140,13 @@ public:
 					sprites[i].trans.x = cosValue;
 				}
 				sprites[i].trans.y += sprites[i].velocity.y / ofGetFrameRate();
+			}
+
+			else if (appliedCircularMovement) {
+				float time = ofGetElapsedTimef();
+				float sinMovement = ofMap(sin(time), -1, 1, 50*i, ofGetWidth() - 50*i);
+				float cosMovement = ofMap(cos(time), -1, 1, 50*i, ofGetHeight() - 50*i);
+				sprites[i].trans = ofVec3f(sinMovement, cosMovement);
 			}
 			else {
 				sprites[i].trans += sprites[i].velocity / ofGetFrameRate();

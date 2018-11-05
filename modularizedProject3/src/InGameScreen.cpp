@@ -70,8 +70,8 @@ void InGameScreen::init()
 		case Level1:
 			initTime = ofGetElapsedTimeMillis();
 				beatLevelOne = false;
+
 				emitterA = Emitter(EMITTERA);
-				
 				emitters.push_back(emitterA);
 
 				emitterA2 = Emitter(EMITTERA2);	
@@ -86,6 +86,15 @@ void InGameScreen::init()
 
 			emitterB = Emitter(EMITTERB);
 			emitters.push_back(emitterB);
+
+			emitterB2 = Emitter(EMITTERB);
+			emitters.push_back(emitterB2);
+
+			emitterB3 = Emitter(EMITTERB);
+			emitters.push_back(emitterB3);
+
+			emitterB4 = Emitter(EMITTERB);
+			emitters.push_back(emitterB4);
 			////emitterB2.sys->applySinMovement(-1);
 
 			cout << "emitter size: " << emitters.size() << endl;
@@ -94,8 +103,21 @@ void InGameScreen::init()
 		case Level3:
 			initTime = ofGetElapsedTimeMillis();
 
+			emitterB = Emitter(EMITTERB);
+			emitters.push_back(emitterB);
+
+			emitterA = Emitter(EMITTERA);
+			emitters.push_back(emitterA);
+
+			emitterA2 = Emitter(EMITTERA2);
+			emitters.push_back(emitterA2);
+
+			emitterB4 = Emitter(EMITTERB);
+			emitters.push_back(emitterB4);
+
 			catPumpkinBoss = Emitter(EMITTERC);
 			catPumpkinBoss.start();
+			catPumpkinBoss.sys->applyCircularMovement();
 			//emitters.push_back(emitterC);
 
 			cout << "emitter size: " << emitters.size() << endl;
@@ -149,13 +171,26 @@ void InGameScreen::draw()
 
 	case WIN:
 		ofDrawBitmapString("YOU WIN",  ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - 150);
-		ofDrawBitmapString("SCORE: " + to_string(playerScore), ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - 130);
+		ofDrawBitmapString("YOUR SCORE: " + to_string(playerScore), ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - 130);
+
+		for (int i = 0; i < 7; i++) {
+			ofDrawBitmapString(scores[i], ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - i * 20);
+		}
+
 		ofDrawBitmapString("Q to go back to menu", ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 + -80);
 		break;
 	case LOSE:
-		ofDrawBitmapString("YOU LOSE", ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - 150);
-		ofDrawBitmapString("SCORE: " + to_string(playerScore), ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - 130);
-		ofDrawBitmapString("Q to go back to menu", ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 + -80);
+		ofDrawBitmapString("YOU LOSE", ofGetWindowWidth() / 2 - 50, ofGetWindowHeight() / 2 - 150);
+		ofDrawBitmapString("YOUR SCORE: " + to_string(playerScore), ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - 110);
+
+		ofDrawBitmapString("HIGH SCORES: ", ofGetWindowWidth() / 2 - 75, ofGetWindowHeight() / 2 - 40);
+		if (scores.size() > 0) {
+			for (int i = 0; i < scores.size() && i < 7; i++) {
+				ofDrawBitmapString(scores[i], ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - 20 + i * 20);
+			}
+		}
+
+		ofDrawBitmapString("Q to go back to menu", ofGetWindowWidth() -200, ofGetWindowHeight() -20);
 		break;
 	default:
 		//draw background image
@@ -171,7 +206,7 @@ void InGameScreen::draw()
 				ofDrawBitmapString("Q to quit, SPACE to fire", ofGetWindowWidth() - 220, ofGetWindowHeight() - 20);
 			}
 			else {
-				ofDrawBitmapString("S to continue onto level 2", 500, 500);
+				ofDrawBitmapString("S to continue onto level 2", ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - 150);
 			}
 			break;
 		case Level2:
@@ -180,7 +215,7 @@ void InGameScreen::draw()
 				ofDrawBitmapString("Q to quit, SPACE to fire", ofGetWindowWidth() - 220, ofGetWindowHeight() - 20);
 			}
 			else if (beatLevelTwo) {
-				ofDrawBitmapString("S to continue onto level 3", 500, 500);
+				ofDrawBitmapString("S to continue onto level 3", ofGetWindowWidth() / 2 - 100, ofGetWindowHeight() / 2 - 150);
 			}
 			break;
 		case Level3:
@@ -217,9 +252,13 @@ void InGameScreen::update() {
 		gunEmitter.update();
 
 		//update enemy emitters
-		for (size_t i = 0; i < emitters.size(); i++) {
-			emitters[i].update();
-
+		for (int i = 0; i < emitters.size(); i++) {
+			if (emitters[i].emitterType == EMITTERB) {
+				emitters[i].update(i);
+			}
+			else {
+				emitters[i].update();
+			}
 			if (emitters[i].spritesFollowGun) {
 				emitters[i].velocity = gunEmitter.trans - emitters[i].trans;
 			}
@@ -237,53 +276,41 @@ void InGameScreen::update() {
 				beatLevelOne = true;
 				winSound.play();
 			}
-			/*else if (confirmedSwitch) {
-				setLevel(2);
-			}*/
+
 			break;
 		case Level2:
-			//if (ofGetElapsedTimeMillis() - initTime > 2000 && !addedEnemies) {
-			//	addEnemies();
-			//}
+			
 			if (allDead && !beatLevelTwo) {
 				beatLevelTwo = true;
 				winSound.play();
 			}
-			/*else if (confirmedSwitch) {
-				setLevel(3);
-			}*/
+
 			break;
 		case Level3:
-			//catPumpkinBoss.update();
+			catPumpkinBoss.update();
 			if (catPumpkinBoss.hp <= 0) {
 				playerScore += 1000;
 				winSound.play();
+				sort(scores.begin(), scores.end(), greater<float>());
+				scores.push_back(playerScore);
 				setLevel(WIN);
+				
 			}
 			break;
 		}
 
-		catPumpkinBoss.update();
 		//if hp hits 0 or below, transition the screen to home
 		if (gunEmitter.hp <= 0) {
 			loseSound.play();
+			scores.push_back(playerScore);
+			sort(scores.begin(), scores.end(), greater<float>());
 			setLevel(LOSE);
 		}
 
 		pe->update();
 	}
 
-	else {
-		switch (levelType) {
-		case WIN:
-
-			break;
-
-		case LOSE:
-
-			break;
-		}
-	}
+	
 
 };
 
@@ -336,11 +363,17 @@ void InGameScreen::removeDeadEmitters() {
 		while (e != emitters.end()) {
 			if (e->hp <= 0) {
 				//          cout << "deleting sprite: " << s->name << endl;
+				if (e->emitterType == EMITTERA) {
+					playerScore += 100;
+				}
+				else if (e->emitterType == EMITTERB) {
+					playerScore += 300;
+				}
 				tmp = emitters.erase(e);
 				e = tmp;
 
 				//give player 100 pts
-				playerScore += 100;
+				
 			}
 			else e++;
 		}
@@ -362,18 +395,12 @@ void InGameScreen::keyPressed(int key) {
 		if (beatLevelOne && !beatLevelTwo) {
 			cout << "switching to level 2" << endl;
 			setLevel(2);
-			//confirmedSwitch = true;
 		}
 
 		else if (beatLevelTwo) {
 			setLevel(3);
 			cout << "switching to level 3" << endl;
-			//confirmedSwitch = true;
-			//catPumpkinBoss.start();
-		}
 
-		else if (levelType == Level3) {
-			catPumpkinBoss.start();
 		}
 
 		break;
