@@ -79,13 +79,10 @@ void InGameScreen::init()
 			emitterB = Emitter(EMITTERB);
 			emitters.push_back(emitterB);
 
-			emitterA2 = Emitter(EMITTERA2);
-			emitters.push_back(emitterA2);
-
-			emitterB2 = Emitter(EMITTERB);
-			emitterB2.setPosition(ofVec3f(200, 500, 0));
+			//emitterB2 = Emitter(EMITTERB);
+			//emitterB2.setPosition(ofVec3f(0, 200, 0));
 			//emitterB2.sys->applySinMovement(-1);
-			emitters.push_back(emitterB2);
+			//emitters.push_back(emitterB2);
 
 			cout << "emitter size: " << emitters.size() << endl;
 
@@ -130,6 +127,7 @@ void InGameScreen::terminate() {
 	playerScore = 0;
 
 	//stop emitters from firing
+	
 	for (size_t i = 0; i < emitters.size(); i++) {
 		emitters[i].emitting = false;
 	}
@@ -158,16 +156,17 @@ void InGameScreen::draw()
 		//draw background image
 		/*background.resize(ofGetWindowWidth(), ofGetWindowHeight());
 		background.draw(0, 0);*/
-
+		/*text.drawString(to_string(gunEmitter.hp), 50, 50);
+		text.drawString(to_string(playerScore), 50, 150);*/
 		ofDrawBitmapString("HP: " + to_string(gunEmitter.hp), 20, 20);
-		ofDrawBitmapString("SCORE: " + to_string(playerScore), 20, 40);
+		ofDrawBitmapString(to_string(playerScore), 20, 40);
 		switch (levelType) {
 		case Level1:
 			if (!beatLevelOne) {
 				ofDrawBitmapString("LEVEL 1: S to start, Q to quit, SPACE to fire", 20, ofGetWindowHeight() - 20);
 			}
-			else if (beatLevelOne) {
-				ofDrawBitmapString("S to continue onto level 2", 400, 400);
+			else {
+				ofDrawBitmapString("S to continue onto level 2", 500, 500);
 			}
 			break;
 		case Level2:
@@ -175,7 +174,7 @@ void InGameScreen::draw()
 				ofDrawBitmapString("LEVEL 2", 20, ofGetWindowHeight() - 20);
 			}
 			else if (beatLevelTwo) {
-				ofDrawBitmapString("S to continue onto level 3", 400, 400);
+				ofDrawBitmapString("S to continue onto level 3", 500, 500);
 			}
 			break;
 		case Level3:
