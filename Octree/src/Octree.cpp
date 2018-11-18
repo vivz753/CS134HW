@@ -11,14 +11,8 @@ void Octree::draw(TreeNode & node, int numLevels, int level) {
 	
     if (level > numLevels) return;
 	level++;
-//    if(level == 2){
-//        ofSetColor(0, 255, 0);
-//    }
-    //int evenOrOdd = level%2;
-    //ofSetColor(0, 0, 255*(evenOrOdd));
     drawBox(node.box, level);
-    //cout << "drawing level: " << level << endl;
-    //ofSetColor(ofColor(level, level, level));
+    
 	for (int i = 0; i < node.children.size(); i++) {
 		draw(node.children[i], numLevels, level);
 	}
@@ -164,8 +158,7 @@ vector<int> Octree::convertVectorIndicesToInts (vector<ofIndexType> indexVector)
 
 void Octree::create(const ofMesh & geo, int numLevels) {
     float startTime = ofGetElapsedTimeMillis();
-	// initialize octree structure
-	//
+	
     root = TreeNode();    
     //intialize root.box
     Box boundingBox = meshBounds(geo);
@@ -181,9 +174,9 @@ void Octree::create(const ofMesh & geo, int numLevels) {
     int totalPointsInBox = getMeshPointsInBox(geo, pointsInsideMesh, boundingBox, pointsInsideBox);
     
     //debug test to check if total points add up to ~210k
-//    for(int i: pointsInsideBox){
-//        cout << "points inside 1st bounding box" << i << endl; ;
-//    }
+    //    for(int i: pointsInsideBox){
+    //        cout << "points inside 1st bounding box" << i << endl; ;
+    //    }
     root.points = pointsInsideBox;
     
     //call recursive function for numLevels

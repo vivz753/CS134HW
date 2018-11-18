@@ -19,8 +19,8 @@
 //  Please document/comment all of your work !
 //  Have Fun !!
 //
-//  Student Name:   < Your Name goes Here >
-//  Date: <date of last version>
+//  Student Name:   Vivian Leung (010229739)
+//  Date: 11/17/2018
 
 
 #include "ofApp.h"
@@ -48,7 +48,7 @@ void ofApp::setup(){
 	cam.setNearClip(.1);
 	cam.setFov(65.5);   // approx equivalent to 28mm in 35mm format
 	ofSetVerticalSync(true);
-	//cam.disableMouseInput();
+	cam.disableMouseInput();
 	ofEnableSmoothing();
 	ofEnableDepthTest();
 
@@ -67,15 +67,6 @@ void ofApp::setup(){
     showOctree = true;
     octree.create(marsMesh, 8);
     
-
-	//boundingBox = meshBounds(mars.getMesh(0));
-    
-	
-	//  Test Box Subdivide
-	//
-//    subDivideBox8(boundingBox, level1);
-//    subDivideBox8(level1[0], level2);
-//    subDivideBox8(level2[0], level3);
 }
 
 //--------------------------------------------------------------
@@ -135,27 +126,13 @@ void ofApp::draw(){
 	
 	ofNoFill();
 	ofSetColor(ofColor::white);
-	//drawBox(boundingBox);
-
-	// Some debug code to test subdivideBox8
-	//
-
-//    ofSetColor(ofColor::red);
-//    for (int i=0; i < level1.size(); i++)
-//        drawBox(level1[i]);
-//
-//    ofSetColor(ofColor::blue);
-//    for (int i = 0; i < level2.size(); i++)
-//        drawBox(level2[i]);
-//
-//    ofSetColor(ofColor::yellow);
-//    for (int i = 0; i < level3.size(); i++)
-//        drawBox(level3[i]);
-
+    
+    //draw Octree
     if(showOctree){
         octree.draw(octree.root, 10, 0);
     }
     
+    //draw leaf nodes
     if(!showOctree && showLeafNodes){
         octree.drawLeafNodes(octree.root);
     }
@@ -296,23 +273,14 @@ void ofApp::mousePressed(int x, int y, int button) {
         Vector3(rayDir.x, rayDir.y, rayDir.z));
     
     float startTime = ofGetElapsedTimeMillis();
-    
     if (octree.intersect(ray, octree.root, octree.selectedNode)) {
         rayIntersected = true;
         int pt;
-        //if(octree.selectedNode.points.size()>0){
-            pt = octree.selectedNode.points[0];
-            intersectPoint = mars.getMesh(0).getVertex(pt);
-            float endTime = ofGetElapsedTimeMillis();
-        cout << endTime - startTime << " millisecdonds to select correct leaf node with " << octree.selectedNode.points.size() << " points" << endl << endl;
-       // }
-        //else{
-        //}
+        pt = octree.selectedNode.points[0];
+        intersectPoint = mars.getMesh(0).getVertex(pt);
+        float endTime = ofGetElapsedTimeMillis();
+        cout << endTime - startTime << " milliseconds to select correct leaf node with " << octree.selectedNode.points.size() << " points" << endl << endl;
     }
-    
-    
-//    if (level3[1].intersect(ray, -1000, 1000)) cout << "intersects" << endl;
-    //cout << doPointSelection();
 }
 
 
