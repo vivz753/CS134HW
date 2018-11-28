@@ -6,6 +6,8 @@
 #include "ray.h"
 #include "Octree.h"
 #include "vector3.h"
+#include "ParticleSystem.h"
+#include "ParticleEmitter.h"
 
 class ofApp : public ofBaseApp{
 
@@ -65,4 +67,10 @@ class ofApp : public ofBaseApp{
         bool rayIntersected;
         bool showOctree;
         bool showLeafNodes;
+
+		//rover model stuff
+		Particle ps = ParticleSystem();
+		Particle p = Particle();
+		
+		ParticleEmitter pe = ParticleEmitter();
 };

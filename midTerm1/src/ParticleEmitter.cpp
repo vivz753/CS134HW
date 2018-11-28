@@ -126,7 +126,7 @@ void ParticleEmitter::spawn(float time) {
 	case DiscEmitter: {
 		ofVec3f direction = ofVec3f(ofRandom(-1, 1), 0, ofRandom(-1, 1));
 		ofVec3f circleRange = ofVec3f(ofRandom(-.25, .25), 0, ofRandom(-.25, .25));
-		//float speed = velocity.length();
+		float speed = velocity.length();
 		//particle.velocity = speed * direction.getNormalized();
 		particle.position.set(position + circleRange);
 	}
