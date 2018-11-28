@@ -66,6 +66,20 @@ void ofApp::setup(){
     showLeafNodes = false;
     showOctree = true;
     octree.create(marsMesh, 8);
+
+	// load lander model
+	if (rover.loadModel("geo/lander.obj")) {
+		rover.setScaleNormalization(false);
+		rover.setScale(.5, .5, .5);
+		rover.setRotation(0, -180, 1, 0, 0);
+		rover.setPosition(0, 0, 0);
+
+		bRoaverLoaded = true;
+	}
+	else {
+		cout << "Error: Can't load model" << "geo/lander.obj" << endl;
+		ofExit(0);
+	}
     
 }
 
@@ -73,6 +87,13 @@ void ofApp::setup(){
 // incrementally update scene (animation)
 //
 void ofApp::update() {
+	//update lander controls
+	ps.update();
+	//cout << ps.particles[0].position << endl;
+	ofVec3f location = ps.particles[0].position;
+	lander.setPosition(location.x, location.y, location.z);
+	pe.setPosition(location);
+	pe.update();
 	//somehow check if user clicked a box, then highlight that box
 }
 //--------------------------------------------------------------

@@ -25,12 +25,8 @@ void ofApp::setup(){
 
 	//initialize particle emitter w/ DiscEmitter type
 	pe.init();
-	pe.sys->addForce(turb);
-	pe.sys->addForce(g);
-	pe.sys->addForce(radialForce);
-	pe.setEmitterType(DiscEmitter);
-	pe.setGroupSize(10);
-	pe.setRandomLife(true);
+	pe.sys->addForce(new GravityForce(ofVec3f(0, -9.8, 0)));
+	pe.setGroupSize(25);
 	//pe.setLifespanRange(ofVec2f(lifespanRange->x, lifespanRange->y));
 
 	bWireframe = false;

@@ -33,6 +33,21 @@ public:
 
 // Some convenient built-in forces
 //
+class ImpulseForce : public ParticleForce { 
+public:
+	ofVec3f force;
+	ImpulseForce() {
+		applyOnce = true; 
+		applied = true; 
+		force = ofVec3f(0, 0, 0); 
+	}
+	void apply(const ofVec3f f) {
+		applied = false; force = f; 
+	}
+	void updateForce(Particle *particle) {
+		particle->forces += force; 
+	}
+	};
 
 class ThrusterForce : public ParticleForce {
 public:
