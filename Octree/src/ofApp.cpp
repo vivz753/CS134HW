@@ -65,7 +65,7 @@ void ofApp::setup(){
     
     showLeafNodes = false;
     showOctree = true;
-    octree.create(marsMesh, 8);
+    octree.create(marsMesh, 10);
     
 }
 
