@@ -70,7 +70,7 @@ void ofApp::setup(){
 	// load lander model
 	if (rover.loadModel("geo/Rover3.obj")) {
 		rover.setScaleNormalization(false);
-		rover.setScale(.5, .5, .5);
+		rover.setScale(.05, .05, .05);
 		rover.setRotation(0, -180, 1, 0, 0);
 		rover.setPosition(0, 0, 0);
 
@@ -81,6 +81,18 @@ void ofApp::setup(){
 		ofExit(0);
 	}
     
+    //intialize particle system to drive model
+    //add thruster force t & turbulence force turb
+    ps.add(p);
+    ps.addForce(t);
+    ps.addForce(turb);
+    
+    //initialize particle emitter w/ DiscEmitter type
+    pe.init();
+    pe.sys->addForce(new GravityForce(ofVec3f(0, -9.8, 0)));
+    pe.setGroupSize(25);
+    //pe.setLifespanRange(ofVec2f(lifespanRange->x, lifespanRange->y));
+    
 }
 
 //--------------------------------------------------------------
@@ -90,10 +102,10 @@ void ofApp::update() {
 	//update lander controls
 	ps.update();
 	//cout << ps.particles[0].position << endl;
-//    ofVec3f location = ps.particles[0].position;
-//    rover.setPosition(location.x, location.y, location.z);
-//    pe.setPosition(location);
-    pe.setPosition(ofVec3f(0,0,0));
+    ofVec3f location = ps.particles[0].position;
+    rover.setPosition(location.x, location.y, location.z);
+    pe.setPosition(location);
+    //pe.setPosition(ofVec3f(0,0,0));
 	pe.update();
 
 	//somehow check if user clicked a box, then highlight that box
@@ -247,6 +259,36 @@ void ofApp::keyPressed(int key) {
 		break;
 	case OF_KEY_DEL:
 		break;
+    case OF_KEY_UP:
+        
+        if (bCtrlKeyDown) {
+            t->forward = true;
+            cout << "ctrl + up key pressed" << endl;
+        }
+        else if(!bCtrlKeyDown) {
+            t->up = true;
+            pe.start();
+            
+        }
+        break;
+    case OF_KEY_DOWN:
+        
+        if (bCtrlKeyDown) {
+            cout << "ctrl + down key pressed" << endl;
+            t->back = true;
+        }
+        else if(!bCtrlKeyDown) {
+            t->down = true;
+            
+        }
+        
+        break;
+    case OF_KEY_LEFT:
+        t->left = true;
+        break;
+    case OF_KEY_RIGHT:
+        t -> right = true;
+        break;
 	default:
 		break;
 	}
@@ -267,15 +309,36 @@ void ofApp::togglePointsDisplay() {
 void ofApp::keyReleased(int key) {
 
 	switch (key) {
-	
-	case OF_KEY_ALT:
-		cam.disableMouseInput();
-		bAltKeyDown = false;
-		break;
-	case OF_KEY_CONTROL:
-		bCtrlKeyDown = false;
-		break;
-	case OF_KEY_SHIFT:
+    case OF_KEY_UP:
+        cout << "up key released" << endl;
+        pe.stop();
+        t->up = false;
+        t->forward = false;
+        t->clear();
+        break;
+    case OF_KEY_DOWN:
+        t->down = false;
+        t->back = false;
+        t->clear();
+        break;
+    case OF_KEY_LEFT:
+        t->left = false;
+        t->clear();
+        break;
+    case OF_KEY_RIGHT:
+        t->right = false;
+        t->clear();
+        break;
+    case OF_KEY_ALT:
+        cam.disableMouseInput();
+        bAltKeyDown = false;
+        break;
+    case OF_KEY_CONTROL:
+        bCtrlKeyDown = false;
+        t->forward = false;
+        t->back = false;
+        break;
+    case OF_KEY_SHIFT:
 		break;
 	default:
 		break;
@@ -553,3 +616,8 @@ bool ofApp::mouseIntersectPlane(ofVec3f planePoint, ofVec3f planeNorm, ofVec3f &
 	rayDir.normalize();
 	return (rayIntersectPlane(rayPoint, rayDir, planePoint, planeNorm, point));
 }
+
+//void ofApp::collisionDetect() {
+//    Vector3 c = roverBox.center();
+//    contact
+//}

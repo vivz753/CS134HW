@@ -4,7 +4,7 @@
 //  Kevin M. Smith
 //
 //  Mars HiRise Project - startup scene
-// 
+//
 //  This is an openFrameworks 3D scene that includes an EasyCam
 //  and example 3D geometry which I have reconstructed from Mars
 //  HiRis photographs taken the Mars Reconnaisance Orbiter
@@ -12,8 +12,8 @@
 //  You will use this source file (and include file) as a starting point
 //  to implement assignment 5  (Parts I and II)
 //
-//  Please do not modify any of the keymappings.  I would like 
-//  the input interface to be the same for each student's 
+//  Please do not modify any of the keymappings.  I would like
+//  the input interface to be the same for each student's
 //  work.  Please also add your name/date below.
 
 //  Please document/comment all of your work !
@@ -33,10 +33,10 @@
 // setup scene, lighting, state and load geometry
 //
 void ofApp::setup(){
-    
 
 
-    
+
+
 	bWireframe = false;
 	bDisplayPoints = false;
 	bAltKeyDown = false;
@@ -52,7 +52,7 @@ void ofApp::setup(){
 	ofEnableSmoothing();
 	ofEnableDepthTest();
 
-	// setup rudimentary lighting 
+	// setup rudimentary lighting
 	//
 	initLightingAndMaterials();
 
@@ -60,14 +60,11 @@ void ofApp::setup(){
 	mars.setScaleNormalization(false);
     //flip the damn model
     mars.setRotation(0, 180, 0, 0, 1);
-    
+
     ofMesh marsMesh = mars.getMesh(0);
-    
+
     showLeafNodes = false;
     showOctree = true;
-<<<<<<< HEAD
-    octree.create(marsMesh, 10);
-=======
     octree.create(marsMesh, 8);
 
 	// load lander model
@@ -83,8 +80,7 @@ void ofApp::setup(){
 		cout << "Error: Can't load model" << "geo/lander.obj" << endl;
 		ofExit(0);
 	}
->>>>>>> 618b58b1adb8a43facd61731ce897072b41a7a1a
-    
+
 }
 
 //--------------------------------------------------------------
@@ -131,7 +127,7 @@ void ofApp::draw(){
 	}
 
 
-	if (bDisplayPoints) {                // display points as an option    
+	if (bDisplayPoints) {                // display points as an option
 		glPointSize(3);
 		ofSetColor(ofColor::green);
 		mars.drawVertices();
@@ -143,30 +139,30 @@ void ofApp::draw(){
 		ofSetColor(ofColor::blue);
 		ofDrawSphere(selectedPoint, .1);
 	}
-    
+
     if(rayIntersected){
         ofSetColor(ofColor::black);
         ofDrawSphere(intersectPoint, .1);
     }
-	
+
 	ofNoFill();
 	ofSetColor(ofColor::white);
-    
+
     //draw Octree
     if(showOctree){
         octree.draw(octree.root, 10, 0);
     }
-    
+
     //draw leaf nodes
     if(!showOctree && showLeafNodes){
         octree.drawLeafNodes(octree.root);
     }
-    
+
 	ofPopMatrix();
 	cam.end();
 }
 
-// 
+//
 
 // Draw an XYZ axis in RGB at world (0,0,0) for reference.
 //
@@ -180,7 +176,7 @@ void ofApp::drawAxis(ofVec3f location) {
 	// X Axis
 	ofSetColor(ofColor(255, 0, 0));
 	ofDrawLine(ofPoint(0, 0, 0), ofPoint(1, 0, 0));
-	
+
 
 	// Y Axis
 	ofSetColor(ofColor(0, 255, 0));
@@ -265,7 +261,7 @@ void ofApp::togglePointsDisplay() {
 void ofApp::keyReleased(int key) {
 
 	switch (key) {
-	
+
 	case OF_KEY_ALT:
 		cam.disableMouseInput();
 		bAltKeyDown = false;
@@ -296,7 +292,7 @@ void ofApp::mousePressed(int x, int y, int button) {
     rayDir.normalize();
     Ray ray = Ray(Vector3(rayPoint.x, rayPoint.y, rayPoint.z),
         Vector3(rayDir.x, rayDir.y, rayDir.z));
-    
+
     float startTime = ofGetElapsedTimeMillis();
     if (octree.intersect(ray, octree.root, octree.selectedNode)) {
         rayIntersected = true;
@@ -309,7 +305,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 }
 
 
-//draw a box from a "Box" class  
+//draw a box from a "Box" class
 //
 void ofApp::drawBox(const Box &box) {
 	Vector3 min = box.parameters[0];
@@ -390,11 +386,11 @@ void ofApp::mouseReleased(int x, int y, int button) {
 
 
 //
-//  ScreenSpace Selection Method: 
+//  ScreenSpace Selection Method:
 //  This is not the octree method, but will give you an idea of comparison
 //  of speed between octree and screenspace.
 //
-//  Select Target Point on Terrain by comparing distance of mouse to 
+//  Select Target Point on Terrain by comparing distance of mouse to
 //  vertice points projected onto screenspace.
 //  if a point is selected, return true, else return false;
 //
@@ -411,7 +407,7 @@ bool ofApp::doPointSelection() {
 	vector<ofVec3f> selection;
 
 	// We check through the mesh vertices to see which ones
-	// are "close" to the mouse point in screen space.  If we find 
+	// are "close" to the mouse point in screen space.  If we find
 	// points that are close, we store them in a vector (dynamic array)
 	//
 	for (int i = 0; i < n; i++) {
@@ -434,10 +430,10 @@ bool ofApp::doPointSelection() {
 		for (int i = 0; i < selection.size(); i++) {
 			ofVec3f point =  cam.worldToCamera(selection[i]);
 
-			// In camera space, the camera is at (0,0,0), so distance from 
+			// In camera space, the camera is at (0,0,0), so distance from
 			// the camera is simply the length of the point vector
 			//
-			float curDist = point.length(); 
+			float curDist = point.length();
 
             //sorting method to find the min curDist
 			if (i == 0 || curDist < distance) {
@@ -445,14 +441,14 @@ bool ofApp::doPointSelection() {
 				selectedPoint = selection[i];
                 //cout << "selectedPoint: " << selectedPoint << endl;
 			}
-            
+
 		}
 	}
 	return bPointSelected;
 }
 
 // Set the camera to use the selected point as it's new target
-//  
+//
 void ofApp::setCameraTarget() {
 
 }
@@ -516,7 +512,7 @@ void ofApp::initLightingAndMaterials() {
 	glEnable(GL_LIGHT0);
 //	glEnable(GL_LIGHT1);
 	glShadeModel(GL_SMOOTH);
-} 
+}
 
 void ofApp::savePicture() {
 	ofImage picture;

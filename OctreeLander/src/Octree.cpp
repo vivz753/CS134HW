@@ -4,6 +4,7 @@
 
 #include "Octree.h"
 #include "vector3.h"
+#include "box.h"
 
 // draw Octree (recursively)
 //
@@ -253,6 +254,35 @@ bool Octree::intersect(const Ray &ray, const TreeNode & node, TreeNode & nodeRtn
     }
     return false;
 
+}
+
+bool Octree::intersect(const Vector3 & v, const TreeNode & node, TreeNode & nodeRtn) {
+    
+    //if box is intersected, recurse on method with node.children[i] as node
+    if(node.box.inside(v)){
+        if(node.children.size()>0){
+            for(int i = 0; i<node.children.size(); i++){
+                //if leaf node is found, break out of loop and return true
+                if (intersect(v, node.children[i], nodeRtn)){
+                    return true;
+                    break;
+                };
+            }
+        }
+        //base case if leaf node is found
+        else{
+            nodeRtn = node;
+            selectedNode = nodeRtn;
+            //cout << "INTERSECTED: leaf node @ point w/ index " << selectedNode.points[0] << endl;
+            return true;
+        }
+    }
+    //base case if node.box isn't intersected by point
+    else{
+        return false;
+    }
+    return false;
+    
 }
 
 
