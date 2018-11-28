@@ -90,9 +90,10 @@ void ofApp::update() {
 	//update lander controls
 	ps.update();
 	//cout << ps.particles[0].position << endl;
-	ofVec3f location = ps.particles[0].position;
-	rover.setPosition(location.x, location.y, location.z);
-	pe.setPosition(location);
+//    ofVec3f location = ps.particles[0].position;
+//    rover.setPosition(location.x, location.y, location.z);
+//    pe.setPosition(location);
+    pe.setPosition(ofVec3f(0,0,0));
 	pe.update();
 
 	//somehow check if user clicked a box, then highlight that box
