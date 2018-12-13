@@ -256,33 +256,75 @@ bool Octree::intersect(const Ray &ray, const TreeNode & node, TreeNode & nodeRtn
 
 }
 
-bool Octree::intersect(const Vector3 & v, const TreeNode & node, TreeNode & nodeRtn) {
-    
-    //if box is intersected, recurse on method with node.children[i] as node
-    if(node.box.inside(v)){
-        if(node.children.size()>0){
-            for(int i = 0; i<node.children.size(); i++){
-                //if leaf node is found, break out of loop and return true
-                if (intersect(v, node.children[i], nodeRtn)){
-                    return true;
-                    break;
-                };
+//bool Octree::intersect(const Vector3 & v, const TreeNode & node, TreeNode & nodeRtn) {
+//
+//    //if box is intersected, recurse on method with node.children[i] as node
+//    if(node.box.inside(v)){
+//        if(node.children.size()>0){
+//            for(int i = 0; i<node.children.size(); i++){
+//                //if leaf node is found, break out of loop and return true
+//                if (intersect(v, node.children[i], nodeRtn)){
+//                    return true;
+//                    break;
+//                };
+//            }
+//        }
+//        //base case if leaf node is found
+//        else{
+//            nodeRtn = node;
+//            selectedNode = nodeRtn;
+//            //cout << "INTERSECTED: leaf node @ point w/ index " << selectedNode.points[0] << endl;
+//            return true;
+//        }
+//    }
+//    //base case if node.box isn't intersected by point
+//    else{
+//        return false;
+//    }
+//    return false;
+//
+//}
+
+// Checks if the particle is within delta distance to any of the vertices in the
+// octree
+bool Octree::collides(Particle & p, float delta, TreeNode & nodeRtn,int & index){
+    return collides(p, delta, root, nodeRtn, index);
+}
+
+bool Octree::collides(Particle & p, const float delta, TreeNode & node, TreeNode & nodeRtn, int& index){
+    // At a leaf node and we are in that node
+    // check if the average distance to the points is less than delta
+    // Base case
+    if (node.children.size() == 0){
+        float min = 10000000;
+        for (int i = 0; i < node.points.size(); i++){
+            ofVec3f vert = mesh.getVertex(node.points[i]);
+            vert = ofVec3f(-vert.x, -vert.y, vert.z);
+            float d = vert.distance(ofVec3f(-p.position.x,-p.position.y,p.position.z));
+            if (d < min){
+                min = d;
+                nodeRtn = node;
+                index = i;
             }
         }
-        //base case if leaf node is found
-        else{
-            nodeRtn = node;
-            selectedNode = nodeRtn;
-            //cout << "INTERSECTED: leaf node @ point w/ index " << selectedNode.points[0] << endl;
+        if(min < delta){
+            cout << ofGetElapsedTimeMillis()<< " Octree:: Collided!" << endl;
             return true;
         }
-    }
-    //base case if node.box isn't intersected by point
-    else{
         return false;
     }
-    return false;
-    
+    // Regular Case
+    // Check if the particles collides with any of the children
+    bool collided = false;
+    for (TreeNode& child : node.children){
+        if (child.box.inside(Vector3(-p.position.x,-p.position.y,p.position.z))){
+            if (collides(p,delta,child,nodeRtn,index)){
+                collided = true;
+                break;
+            }
+        }
+    }
+    return collided;
 }
 
 

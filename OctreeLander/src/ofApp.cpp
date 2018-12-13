@@ -56,25 +56,37 @@ void ofApp::setup(){
 	//
 	initLightingAndMaterials();
 
-	mars.loadModel("geo/mars-low-v2.obj");
+	mars.loadModel("geo/mars-tree-singlemesh.obj");
 	mars.setScaleNormalization(false);
     //flip the damn model
     mars.setRotation(0, 180, 0, 0, 1);
     
-    ofMesh marsMesh = mars.getMesh(0);
+    cout << "number of meshes:  " << mars.getNumMeshes() << endl;
+    
+    
+    for(int i=0; i < mars.getNumMeshes(); i ++){
+        ofMesh marsMesh = mars.getMesh(i);
+        Octree octree = Octree();
+        octree.create(marsMesh, 4);
+        octrees.push_back(octree);
+    }
+    
+//    ofMesh marsMesh = mars.getMesh(1);
     
     showLeafNodes = false;
     showOctree = true;
-    octree.create(marsMesh, 4);
+//    octree.create(marsMesh, 4);
 
 	// load lander model
-	if (rover.loadModel("geo/Rover3.obj")) {
+	if (rover.loadModel("geo/barrel.obj")) {
 		rover.setScaleNormalization(false);
 		rover.setScale(.05, .05, .05);
 		rover.setRotation(0, -180, 1, 0, 0);
 		rover.setPosition(0, 0, 0);
 
 		bRoverLoaded = true;
+        
+        cout << "number of meshes:  " << rover.getNumMeshes() << endl;
 	}
 	else {
 		cout << "Error: Can't load model" << "geo/lander.obj" << endl;
@@ -164,12 +176,18 @@ void ofApp::draw(){
     
     //draw Octree
     if(showOctree){
-        octree.draw(octree.root, 10, 0);
+        for(int i=0; i<octrees.size(); i++){
+            octrees[i].draw(octrees[i].root, 4, 0);
+        }
+        //octree.draw(octree.root, 10, 0);
     }
     
     //draw leaf nodes
     if(!showOctree && showLeafNodes){
-        octree.drawLeafNodes(octree.root);
+        for(int i=0; i<octrees.size(); i++){
+            octrees[i].drawLeafNodes(octrees[i].root);
+        }
+//        octree.drawLeafNodes(octree.root);
     }
 
 	//rover stuff
@@ -363,14 +381,14 @@ void ofApp::mousePressed(int x, int y, int button) {
         Vector3(rayDir.x, rayDir.y, rayDir.z));
     
     float startTime = ofGetElapsedTimeMillis();
-    if (octree.intersect(ray, octree.root, octree.selectedNode)) {
-        rayIntersected = true;
-        int pt;
-        pt = octree.selectedNode.points[0];
-        intersectPoint = mars.getMesh(0).getVertex(pt);
-        float endTime = ofGetElapsedTimeMillis();
-        cout << endTime - startTime << " milliseconds to select correct leaf node with " << octree.selectedNode.points.size() << " points" << endl << endl;
-    }
+//    if (octree.intersect(ray, octree.root, octree.selectedNode)) {
+//        rayIntersected = true;
+//        int pt;
+//        pt = octree.selectedNode.points[0];
+//        intersectPoint = mars.getMesh(0).getVertex(pt);
+//        float endTime = ofGetElapsedTimeMillis();
+//        cout << endTime - startTime << " milliseconds to select correct leaf node with " << octree.selectedNode.points.size() << " points" << endl << endl;
+//    }
 }
 
 

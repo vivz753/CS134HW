@@ -3,6 +3,7 @@
 #include "box.h"
 #include "ray.h"
 #include "vector3.h"
+#include "Particle.h"
 
 
 class TreeNode {
@@ -35,4 +36,8 @@ public:
 	ofMesh mesh;
 	TreeNode root;
     TreeNode selectedNode;
+    
+    
+    bool collides(Particle & p, float delta, TreeNode & nodeRtn, int & index);
+    bool collides(Particle & p, const float delta, TreeNode & node, TreeNode & nodeRtn, int & index);
 };

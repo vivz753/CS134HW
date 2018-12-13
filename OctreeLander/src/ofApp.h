@@ -13,6 +13,7 @@ class ofApp : public ofBaseApp{
 
 	public:
         Octree octree;
+        vector<Octree> octrees;
     
 		void setup();
 		void update();
